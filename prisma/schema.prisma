@@ -19,3 +19,35 @@ model User {
   username String @unique
   password String
 }
+
+model Line {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(5) @unique
+  routes Route[]
+}
+
+model Route {
+  id      Int          @id @default(autoincrement())
+  name    String       @db.VarChar(25)
+  entries RouteEntry[]
+  lineID  Int
+  Line    Line         @relation(fields: [lineID], references: [id], onDelete: Cascade)
+}
+
+model RouteEntry {
+  busStopID     Int
+  routeID       Int
+  estimatedTime Int
+  route         Route   @relation(fields: [routeID], references: [id], onDelete: Cascade)
+  busStop       BusStop @relation(fields: [busStopID], references: [id])
+
+  @@id([busStopID, routeID])
+}
+
+model BusStop {
+  id           Int          @id @default(autoincrement())
+  name         String       @db.VarChar(30) @unique
+  gpsX         Float
+  gpsY         Float
+  routeEntries RouteEntry[]
+}
