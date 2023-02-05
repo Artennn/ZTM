@@ -30,6 +30,7 @@ model Route {
   id      Int          @id @default(autoincrement())
   name    String       @db.VarChar(25)
   entries RouteEntry[]
+  schedule Schedule[]
   lineID  Int
   Line    Line         @relation(fields: [lineID], references: [id], onDelete: Cascade)
 }
@@ -42,6 +43,14 @@ model RouteEntry {
   busStop       BusStop @relation(fields: [busStopID], references: [id])
 
   @@id([busStopID, routeID])
+}
+
+model Schedule {
+  id Int @id @default(autoincrement())
+  day Int
+  time Int
+  routeID Int
+  route Route @relation(fields: [routeID], references: [id], onDelete: Cascade)
 }
 
 model BusStop {
