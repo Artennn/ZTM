@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 import { Prisma } from "@prisma/client";
-import { newLineValidator } from "components/line/NewLine";
+import { newLineValidator } from "components/line/LineEditor";
 
 const includeFullLine = Prisma.validator<Prisma.LineInclude>()({
   routes: {
