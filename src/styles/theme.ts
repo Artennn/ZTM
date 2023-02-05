@@ -9,11 +9,52 @@ const roboto = Roboto({
   fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
+export const RouteColors = [
+  "green",
+  "blue",
+  "red",
+  "yellow",
+  "orange",
+  "purple",
+];
+
+declare module "@mui/material/styles" {
+  interface ThemeOptions {
+    gradient: {
+      primary: string;
+      hover: string;
+      selected: string;
+    };
+    border: {
+      primary: string;
+    };
+  }
+
+  interface Theme {
+    gradient: ThemeOptions["gradient"];
+    border: ThemeOptions["border"];
+  }
+}
+
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
+    text: {
+      disabled: "white",
+    },
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
+  },
+  gradient: {
+    primary:
+      "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))",
+    hover:
+      "linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.3))",
+    selected:
+      "linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.2))",
+  },
+  border: {
+    primary: "2px solid grey",
   },
 });
