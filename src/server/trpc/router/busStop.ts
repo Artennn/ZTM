@@ -38,4 +38,38 @@ export const busStopRouter = router({
       });
       return result;
     }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        gpsX: z.number(),
+        gpsY: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, name, gpsX, gpsY } = input;
+      const result = await ctx.prisma.busStop.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name,
+          gpsX,
+          gpsY,
+        },
+      });
+      return result;
+    }),
+  delete: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ input, ctx }) => {
+      const id = input;
+      const result = await ctx.prisma.busStop.delete({
+        where: {
+          id: id,
+        },
+      });
+      return result;
+    }),
 });

@@ -5,21 +5,28 @@ import {
   Polyline,
   Popup,
   useMapEvents,
+  Tooltip,
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-import L, { LatLng } from "leaflet";
+import L, { type LatLng } from "leaflet";
 
-L.Marker.prototype.options.icon = L.icon({
+const MarkerIcon = L.icon({
   iconUrl: "/busStop.png",
   iconAnchor: [8, 8],
 });
+const SelectedMarkerIcon = L.icon({
+  iconUrl: "/busStop2.png",
+  iconAnchor: [8, 8],
+});
+
+L.Marker.prototype.options.icon = MarkerIcon;
 
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import { BusStop } from "@prisma/client";
+import type { BusStop } from "@prisma/client";
 
 const MapControl = ({ onClick }: { onClick: (gps: LatLng) => void }) => {
   useMapEvents({
@@ -48,15 +55,16 @@ const Map = ({
   scrollWhell?: boolean;
   busStops?: BusStop[];
   routes?: {
-    stops: BusStop[];
+    label?: string;
     color?: string;
+    stops: BusStop[];
   }[];
   selectedPos?: [number, number];
   onClick?: (gps: [number, number]) => void;
   onBusStopSelect?: (name: string) => void;
 }) => {
   const polyLines = routes?.map((route) => ({
-    color: route.color,
+    ...route,
     stops: route.stops.map(
       (busStop) => [busStop.gpsX, busStop.gpsY] as [number, number]
     ),
@@ -97,7 +105,7 @@ const Map = ({
       ))}
 
       {selectedPos && (
-        <Marker position={selectedPos}>
+        <Marker position={selectedPos} icon={SelectedMarkerIcon}>
           <Popup>
             <Typography>Wybrana pozycja</Typography>
           </Popup>
@@ -108,8 +116,14 @@ const Map = ({
         <Polyline
           key={key}
           positions={polyLine.stops}
-          pathOptions={{ color: polyLine.color }}
-        />
+          pathOptions={{ color: polyLine.color || "red" }}
+        >
+          {polyLine.label && (
+            <Tooltip sticky direction="top">
+              {polyLine.label}
+            </Tooltip>
+          )}
+        </Polyline>
       ))}
 
       <MapControl onClick={handleOnClick} />
