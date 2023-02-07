@@ -18,6 +18,7 @@ import { trpc } from "utils/trpc";
 import { z } from "zod";
 
 import { RouteColors } from "styles/theme";
+import List from "components/List";
 
 export const newLineValidator = z.object({
   name: z.string(),
@@ -77,13 +78,11 @@ const NewRoutes = ({
   };
 
   return (
-    <>
-      <Typography variant="h6" textAlign="center" mb={1}>
-        Kierunki:
-      </Typography>
-
-      <Stack direction="column" overflow="auto" mb={1}>
-        {routes.map((route, key) => (
+    <List
+      title="Kierunki"
+      items={routes.map((route, key) => ({
+        filterBy: route.name,
+        component: (
           <Paper
             key={key}
             sx={{
@@ -124,18 +123,14 @@ const NewRoutes = ({
               </Button>
             </Stack>
           </Paper>
-        ))}
-      </Stack>
-
-      <Button
-        variant="contained"
-        color="success"
-        onClick={handleAddNewRoute}
-        sx={{ mr: "auto", ml: "auto", mt: "auto" }}
-      >
-        Dodaj kierunek
-      </Button>
-    </>
+        ),
+      }))}
+      actionGroup={
+        <Button variant="contained" color="success" onClick={handleAddNewRoute}>
+          Dodaj kierunek
+        </Button>
+      }
+    />
   );
 };
 
@@ -173,14 +168,14 @@ const NewRoute = ({
   };
 
   return (
-    <>
-      <Typography variant="h6" textAlign="center" mb={1}>
-        Trasa:
-      </Typography>
-
-      <Stack direction="column" overflow="auto" mb={1}>
-        {activeRoute?.entries?.map((entry, key) => (
-          <Paper sx={{ p: 1, mb: 2 }} key={key}>
+    <List
+      title="Trasa"
+      noAutoFocus
+      options={activeRoute?.entries.map((entry) => entry.busStop.name) || []}
+      items={activeRoute?.entries.map((entry, key) => ({
+        filterBy: entry.busStop.name,
+        component: (
+          <Paper sx={{ p: 1, mb: 2 }}>
             <Stack direction="row" spacing="auto">
               <Typography variant="subtitle1">{entry.busStop.name}</Typography>
 
@@ -213,17 +208,14 @@ const NewRoute = ({
               </Button>
             </Stack>
           </Paper>
-        ))}
-      </Stack>
-
-      <Button
-        variant="contained"
-        color="success"
-        sx={{ mr: "auto", ml: "auto", mt: "auto" }}
-      >
-        Wyszukaj przystanek
-      </Button>
-    </>
+        ),
+      }))}
+      actionGroup={
+        <Button variant="contained" color="success">
+          Dodaj Przystanek
+        </Button>
+      }
+    />
   );
 };
 
@@ -317,42 +309,21 @@ const LineEditor = () => {
             />
           </Stack>
 
-          <Stack
-            direction="column"
-            sx={{
-              p: 1,
-              flexGrow: 1,
-              height: 0,
-              minWidth: "35vmin",
-              border: (theme) => theme.border.primary,
-            }}
-          >
             <NewRoutes
               activeRouteID={activeRouteID}
               routes={routes}
               setRoutes={setRoutes}
               setActiveRouteID={setActiveRouteID}
             />
-          </Stack>
         </Stack>
       </Grid>
 
       <Grid item xs lg="auto" height={{ xs: 0.5, lg: 1.0 }}>
-        <Stack
-          sx={{
-            p: 1,
-            height: 1,
-            minWidth: "35vmin",
-            overflowY: "auto",
-            border: (theme) => theme.border.primary,
-          }}
-        >
           <NewRoute
             activeRouteID={activeRouteID}
             routes={routes}
             setRoutes={setRoutes}
           />
-        </Stack>
       </Grid>
 
       <Grid item xs={12} lg height={{ xs: 0.5, lg: 1.0 }}>

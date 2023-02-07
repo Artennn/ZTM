@@ -14,6 +14,7 @@ import { type MouseEvent, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { trpc } from "utils/trpc";
 
+import List from "./List";
 import NewBusStop from "./dialogs/NewBusStop";
 import Schedule from "./dialogs/Schedule";
 
@@ -122,7 +123,7 @@ const BusStopCard = ({
 
 const BusStops = () => {
   const trpcContext = trpc.useContext();
-  const { data: busStops } = trpc.busStop.get.useQuery();
+  const { isLoading, data: busStops } = trpc.busStop.get.useQuery();
   const { mutate: deleteBusStop } = trpc.busStop.delete.useMutation();
 
   const [selected, setSelected] = useState<BusStop>();
@@ -169,31 +170,25 @@ const BusStops = () => {
   return (
     <Grid container spacing={2} sx={{ height: "100vh" }}>
       <Grid item md={3} height="100%">
-        <Stack
-          direction="column"
-          sx={{
-            p: 1,
-            height: "100%",
-            overflowY: "auto",
-            border: (theme) => theme.border.primary,
-          }}
-        >
-          <Typography variant="h5" textAlign="center">
-            Przystanki
-          </Typography>
-
-          {busStops?.map((busStop, key) => (
-            <BusStopCard
-              key={key}
-              busStop={busStop}
-              selected={selected === busStop}
-              onSelect={handleSelect}
-              onEdit={handleEdit}
-              onShowSchedule={handleShowSchedule}
-              onDelete={handleDelete}
-            />
-          ))}
-        </Stack>
+        <List
+          title="Przystanki"
+          isLoading={isLoading}
+          options={busStops?.map((busStop) => busStop.name)}
+          items={busStops?.map((busStop, key) => ({
+            filterBy: busStop.name,
+            component: (
+              <BusStopCard
+                key={key}
+                busStop={busStop}
+                selected={selected === busStop}
+                onSelect={handleSelect}
+                onEdit={handleEdit}
+                onShowSchedule={handleShowSchedule}
+                onDelete={handleDelete}
+              />
+            ),
+          }))}
+        />
       </Grid>
 
       <Grid item md>

@@ -1,13 +1,14 @@
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/dist/client/router";
 import dynamic from "next/dynamic";
 import type { NextPage } from "next";
 
 import { MainLayout } from "components/Layouts";
+import List from "components/List";
 import LineCard from "components/line/LineCard";
 
 import { trpc } from "utils/trpc";
@@ -16,9 +17,10 @@ import { RouteColors } from "styles/theme";
 
 const LinesPage: NextPage = () => {
   useSession({ required: true });
+  const router = useRouter();
 
   const { data: busStops } = trpc.busStop.get.useQuery();
-  const { data: lines } = trpc.line.get.useQuery();
+  const { isLoading: linesLoading, data: lines } = trpc.line.get.useQuery();
 
   const [selectedLineID, setSelectedLineID] = useState(0);
   const selectedLine = lines?.[selectedLineID];
@@ -41,24 +43,30 @@ const LinesPage: NextPage = () => {
     <MainLayout title="Lista linii">
       <Grid container spacing={2} sx={{ height: "100vh" }}>
         <Grid item md={3}>
-          <Stack
-            direction="column"
-            height="100%"
-            p={2}
-            spacing={2}
-            border={(theme) => theme.border.primary}
-          >
-            <Typography textAlign="center"> Lista Linii </Typography>
-
-            {lines?.map((line, key) => (
-              <LineCard
-                key={key}
-                line={line}
-                selected={selectedLine?.id === line.id}
-                onSelect={handleSelect}
-              />
-            ))}
-          </Stack>
+          <List
+            title="Linie"
+            isLoading={linesLoading}
+            options={lines?.map((line) => line.name)}
+            items={lines?.map((line) => ({
+              filterBy: line.name,
+              component: (
+                <LineCard
+                  line={line}
+                  selected={selectedLine?.id === line.id}
+                  onSelect={handleSelect}
+                />
+              ),
+            }))}
+            actionGroup={
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => router.push("line/create")}
+              >
+                Nowa Linia
+              </Button>
+            }
+          />
         </Grid>
 
         <Grid item md>
@@ -68,10 +76,10 @@ const LinesPage: NextPage = () => {
             routes={
               selectedLine
                 ? selectedLine.routes.map((route, key) => ({
-                    label: route.name,
-                    color: RouteColors[key] || "pink",
-                    stops: route.entries.map((entry) => entry.busStop),
-                  }))
+                label: route.name,
+                color: RouteColors[key] || "pink",
+                stops: route.entries.map((entry) => entry.busStop),
+              }))
                 : undefined
             }
           />
