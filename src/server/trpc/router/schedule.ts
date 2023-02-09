@@ -15,14 +15,19 @@ export const scheduleRouter = router({
     .input(z.number())
     //prettier-ignore
     .query(async ({ input, ctx }) => {
-      const schedule = await ctx.prisma.schedule.findMany({
+      const line = await ctx.prisma.line.findUnique({
         where: {
-          route: {
-            lineID: input,
+          id: input,
+        },
+        include: {
+          routes: {
+            include: {
+              schedule: true,
+            },
           },
         },
       });
-      return schedule;
+      return line;
     }),
   getByStop: protectedProcedure
     .input(z.number())
@@ -115,6 +120,5 @@ export const scheduleRouter = router({
           day: entry.day,
         })),
       });
-      console.log(backup);
     }),
 });

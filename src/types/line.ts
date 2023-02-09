@@ -1,5 +1,7 @@
-import type { Line as PrismaLine } from "server/trpc/router/line";
+import type { Line as PrismaFullLine } from "server/trpc/router/line";
 import type {
+  Line as PrismaLine,
+  Route as PrismaRoute,
   BusStop as PrismaBusStop,
   Schedule as PrismaSchedule,
 } from "@prisma/client";
@@ -7,10 +9,12 @@ import type {
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 export type Line = PrismaLine;
+export type FullLine = PrismaFullLine;
 
-export type Route = Line["routes"][number];
+export type Route = PrismaRoute;
+export type FullRoute = FullLine["routes"][number];
 
-export type RouteEntry = Line["routes"][number]["entries"][number];
+export type RouteEntry = FullLine["routes"][number]["entries"][number];
 
 export type BusStop = PrismaBusStop;
 

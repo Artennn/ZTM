@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { trpc } from "utils/trpc";
+import { useRouter } from "next/router";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -11,29 +11,26 @@ import Collapse from "@mui/material/Collapse";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 
-import ScheduleEditor from "components/dialogs/ScheduleEditor";
-
-import type { Line } from "types/line";
+import type { Line, Route } from "types/line";
 import { RouteColors } from "styles/theme";
 
 const LineCard = ({
   line,
   selected,
   onSelect,
+  onShowSchedule,
 }: {
-  line: Line;
+  line: Line & {
+    routes: Route[];
+  };
   selected?: boolean;
   onSelect: (id: number) => void;
+  onShowSchedule: (id: number) => void;
 }) => {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
-  const [showSchedule, setShowSchedule] = useState(false);
-
-  const { isLoading: isScheduleLoading, data: schedule } =
-    trpc.schedule.getByLine.useQuery(line.id, { enabled: showSchedule });
 
   return (
-    <>
       <Paper
         onClick={() => onSelect(line.id)}
         sx={{
@@ -85,7 +82,7 @@ const LineCard = ({
                 size="small"
                 variant="contained"
                 color="success"
-                onClick={() => setShowSchedule(!showSchedule)}
+              onClick={() => onShowSchedule(line.id)}
               >
                 Rozklad
               </Button>
@@ -93,15 +90,6 @@ const LineCard = ({
           </Collapse>
         </Stack>
       </Paper>
-
-      {showSchedule && !isScheduleLoading && schedule && (
-        <ScheduleEditor
-          line={line}
-          schedule={schedule}
-          onClose={() => setShowSchedule(false)}
-        />
-      )}
-    </>
   );
 };
 export default LineCard;

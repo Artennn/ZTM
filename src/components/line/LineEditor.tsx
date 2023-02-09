@@ -20,7 +20,7 @@ import { z } from "zod";
 import { RouteColors } from "styles/theme";
 import List from "components/List";
 
-import type { Line } from "types/line";
+import type { FullLine } from "types/line";
 
 export const newLineValidator = z.object({
   id: z.number().optional(),
@@ -223,7 +223,7 @@ const NewRoute = ({
   );
 };
 
-const LineEditor = ({ line }: { line?: Line }) => {
+const LineEditor = ({ line }: { line?: FullLine }) => {
   const router = useRouter();
 
   const { mutate: addLine } = trpc.line.add.useMutation();

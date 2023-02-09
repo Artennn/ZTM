@@ -7,9 +7,9 @@ import LineEditor from "components/line/LineEditor";
 import { prisma } from "server/db/client";
 import { includeFullLine } from "server/trpc/router/line";
 
-import type { Line } from "types/line";
+import type { FullLine } from "types/line";
 
-const EditLinePage: NextPage<{ line: Line }> = ({ line }) => {
+const EditLinePage: NextPage<{ line: FullLine }> = ({ line }) => {
   useSession({ required: true });
 
   return (

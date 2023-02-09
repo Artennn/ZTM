@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
 
 import Add from "@mui/icons-material/Add";
@@ -13,25 +13,39 @@ import Tabs from "@mui/material/Tabs";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-import type { Schedule } from "@prisma/client";
-import type { Line, NewSchedule } from "types/line";
+import type { NewSchedule } from "types/line";
 
 import Time, { Days } from "utils/time";
 
 const ScheduleEditor = ({
-  line,
-  schedule,
+  lineID,
   onClose,
 }: {
-  line: Line;
-  schedule: Schedule[];
+  lineID: number;
   onClose: () => void;
 }) => {
-  const trpcContext = trpc.useContext();
   const { mutate: saveSchedule } = trpc.schedule.save.useMutation();
+  const { data: line, refetch } = trpc.schedule.getByLine.useQuery(lineID, {
+    enabled: false,
+    onSuccess: (data) => {
+      if (!data) return;
 
-  const [selectedRouteID, setSelectedRouteID] = useState(line.routes[0]?.id);
-  const [entries, setEntries] = useState<NewSchedule[]>(schedule);
+      let schedule: NewSchedule[] = [];
+      for (const sch of data.routes) {
+        schedule = [...sch.schedule, ...schedule];
+      }
+
+      setEntries(schedule);
+      setSelectedRouteID(data.routes[0]?.id);
+    },
+  });
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  const [selectedRouteID, setSelectedRouteID] = useState<number>();
+  const [entries, setEntries] = useState<NewSchedule[]>([]);
   const displayedEntries = entries.filter(
     (entry) => entry.routeID === selectedRouteID
   );
@@ -47,6 +61,8 @@ const ScheduleEditor = ({
     const time = Time.toMinutes(inputTime);
     if (!time) return;
 
+    const newEntry = { day: entryID, time: time, routeID: selectedRouteID };
+
     if (
       entries.find(
         (entry) =>
@@ -57,10 +73,7 @@ const ScheduleEditor = ({
     )
       return;
 
-    setEntries([
-      ...entries,
-      { day: entryID, time: time, routeID: selectedRouteID },
-    ]);
+    setEntries([...entries, newEntry]);
     handleChangeNewEntries(entryID, "");
   };
 
@@ -77,7 +90,7 @@ const ScheduleEditor = ({
     setEntries([...entries, ...added]);
   };
 
-  const handleDeleteEntry = (entry: Partial<Schedule>) => {
+  const handleDeleteEntry = (entry: NewSchedule) => {
     setEntries(
       entries.filter(
         (x) =>
@@ -104,14 +117,11 @@ const ScheduleEditor = ({
   const handleSaveSchedule = () => {
     saveSchedule(
       {
-        lineID: line.id,
+        lineID: lineID,
         schedule: entries,
       },
       {
-        onSuccess: async () => {
-          const hey = await trpcContext.schedule.getByLine.fetch(line.id);
-          setEntries(hey);
-        },
+        onSuccess: () => refetch(),
       }
     );
   };
@@ -126,14 +136,14 @@ const ScheduleEditor = ({
     >
       <Stack direction="column" p={2} height="90vh">
         <Typography variant="h4" textAlign="center">
-          {`Rozkład linii ${line.name}`}
+          {`Rozkład linii ${line?.name}`}
         </Typography>
 
         <Tabs
           value={selectedRouteID}
           onChange={(e, v) => setSelectedRouteID(v)}
         >
-          {line.routes.map((route, key) => (
+          {line?.routes.map((route, key) => (
             <Tab key={key} value={route.id} label={`Kierunek ${route.name}`} />
           ))}
         </Tabs>

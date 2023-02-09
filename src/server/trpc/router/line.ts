@@ -49,7 +49,9 @@ export const lineRouter = router({
           id: input?.id,
           name: input?.name,
         },
-        include: { ...includeFullLine },
+        include: {
+          routes: true,
+        },
       });
       return lines;
     }),

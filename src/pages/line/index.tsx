@@ -10,6 +10,7 @@ import type { NextPage } from "next";
 import { MainLayout } from "components/Layouts";
 import List from "components/List";
 import LineCard from "components/line/LineCard";
+import ScheduleEditor from "components/dialogs/ScheduleEditor";
 
 import { trpc } from "utils/trpc";
 
@@ -20,10 +21,12 @@ const LinesPage: NextPage = () => {
   const router = useRouter();
 
   const { data: busStops } = trpc.busStop.get.useQuery();
-  const { isLoading: linesLoading, data: lines } = trpc.line.get.useQuery();
+  const { isLoading: linesLoading, data: lines } = trpc.line.getMany.useQuery();
 
   const [selectedLineID, setSelectedLineID] = useState(0);
-  const selectedLine = lines?.[selectedLineID];
+  const { data: selectedLine } = trpc.line.get.useQuery(selectedLineID);
+
+  const [showSchedule, setShowSchedule] = useState(0);
 
   const Map = useMemo(
     () =>
@@ -32,12 +35,6 @@ const LinesPage: NextPage = () => {
       }),
     []
   );
-
-  const handleSelect = (id: number) => {
-    const newSelected = lines?.findIndex((line) => line.id === id);
-    if (newSelected === -1 || newSelected === undefined) return;
-    setSelectedLineID(newSelected);
-  };
 
   return (
     <MainLayout title="Lista linii">
@@ -53,7 +50,8 @@ const LinesPage: NextPage = () => {
                 <LineCard
                   line={line}
                   selected={selectedLine?.id === line.id}
-                  onSelect={handleSelect}
+                  onSelect={(id) => setSelectedLineID(id)}
+                  onShowSchedule={(id) => setShowSchedule(id)}
                 />
               ),
             }))}
@@ -74,17 +72,23 @@ const LinesPage: NextPage = () => {
             scrollWhell
             busStops={busStops}
             routes={
-              selectedLine
-                ? selectedLine.routes.map((route, key) => ({
+              selectedLine &&
+              selectedLine.routes.map((route, key) => ({
                 label: route.name,
                 color: RouteColors[key] || "pink",
                 stops: route.entries.map((entry) => entry.busStop),
               }))
-                : undefined
             }
           />
         </Grid>
       </Grid>
+
+      {showSchedule && (
+        <ScheduleEditor
+          lineID={showSchedule}
+          onClose={() => setShowSchedule(0)}
+        />
+      )}
     </MainLayout>
   );
 };
