@@ -45,6 +45,7 @@ const Map = ({
   doubleClick,
   busStops,
   routes,
+  selectedBusStop,
   selectedPos,
   onClick,
   onBusStopSelect,
@@ -59,6 +60,7 @@ const Map = ({
     color?: string;
     stops: BusStop[];
   }[];
+  selectedBusStop?: BusStop;
   selectedPos?: [number, number];
   onClick?: (gps: [number, number]) => void;
   onBusStopSelect?: (name: string) => void;
@@ -87,7 +89,13 @@ const Map = ({
       }}
     >
       {busStops?.map((busStop, key) => (
-        <Marker position={[busStop.gpsX, busStop.gpsY]} key={key}>
+        <Marker
+          position={[busStop.gpsX, busStop.gpsY]}
+          icon={
+            selectedBusStop?.id === busStop.id ? SelectedMarkerIcon : MarkerIcon
+          }
+          key={key}
+        >
           <Popup>
             <Stack direction="column">
               <Typography variant="subtitle2"> {busStop.name} </Typography>

@@ -196,6 +196,7 @@ const BusStops = () => {
           <Map
             scrollWhell
             busStops={busStops}
+            selectedBusStop={selected}
             zoom={selected ? 16 : undefined}
             center={selected ? [selected.gpsX, selected.gpsY] : undefined}
             onBusStopSelect={handleSelect}
