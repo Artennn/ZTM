@@ -25,6 +25,7 @@ const LineCard = ({
   selected?: boolean;
   onSelect: (id: number) => void;
 }) => {
+  const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
 
@@ -71,7 +72,12 @@ const LineCard = ({
                 Usun
               </Button>
 
-              <Button size="small" variant="contained" color="primary">
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => router.push(`/line/${line.id}`)}
+              >
                 Edytuj
               </Button>
 

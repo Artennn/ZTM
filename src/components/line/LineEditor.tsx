@@ -20,10 +20,14 @@ import { z } from "zod";
 import { RouteColors } from "styles/theme";
 import List from "components/List";
 
+import type { Line } from "types/line";
+
 export const newLineValidator = z.object({
+  id: z.number().optional(),
   name: z.string(),
   routes: z.array(
     z.object({
+      id: z.number().optional(),
       name: z.string(),
       entries: z.array(
         z.object({
@@ -219,14 +223,15 @@ const NewRoute = ({
   );
 };
 
-const LineEditor = () => {
+const LineEditor = ({ line }: { line?: Line }) => {
   const router = useRouter();
 
-  const { mutate: saveLine } = trpc.line.add.useMutation();
+  const { mutate: addLine } = trpc.line.add.useMutation();
+  const { mutate: editLine } = trpc.line.edit.useMutation();
   const { data: busStops } = trpc.busStop.get.useQuery();
 
-  const [name, setName] = useState<NewLine["name"]>("");
-  const [routes, setRoutes] = useState<NewLine["routes"]>([]);
+  const [name, setName] = useState<string>(line?.name || "");
+  const [routes, setRoutes] = useState<NewLine["routes"]>(line?.routes || []);
 
   const [activeRouteID, setActiveRouteID] = useState(0);
 
@@ -262,15 +267,14 @@ const LineEditor = () => {
 
   const handleSaveLine = () => {
     const newLine: NewLine = {
+      id: line?.id,
       name,
       routes,
     };
     if (!newLineValidator.parse(newLine)) return;
 
-    saveLine({
-      name,
-      routes,
-    });
+    if (!newLine?.id) return addLine(newLine);
+    editLine(newLine);
   };
 
   const handleCancel = () => {
