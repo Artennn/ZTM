@@ -10,13 +10,13 @@ import Stack from "@mui/material/Stack";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-import { type MouseEvent, useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
+import { type MouseEvent, useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
 
 import List from "./List";
 import NewBusStop from "./dialogs/NewBusStop";
 import Schedule from "./dialogs/Schedule";
+import { useMapContainer } from "./Misc";
 
 import type { BusStop } from "@prisma/client";
 
@@ -132,13 +132,7 @@ const BusStops = () => {
   const [editing, setEditing] = useState<BusStop>();
   const [showSchedule, setShowSchedule] = useState<BusStop>();
 
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("./Map"), {
-        ssr: false,
-      }),
-    [selected]
-  );
+  const Map = useMapContainer([selected]);
 
   const handleSelect = (name: string) => {
     const stop = busStops?.find((x) => x.name === name);

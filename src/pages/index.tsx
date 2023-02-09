@@ -1,4 +1,4 @@
-import { MainLayout } from "components/Layouts";
+import { MainLayout } from "components/Misc";
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 

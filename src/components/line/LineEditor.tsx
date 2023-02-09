@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/dist/client/router";
-import dynamic from "next/dynamic";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,6 +18,7 @@ import { z } from "zod";
 
 import { RouteColors } from "styles/theme";
 import List from "components/List";
+import { useMapContainer } from "components/Misc";
 
 import type { FullLine } from "types/line";
 
@@ -235,13 +235,7 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
 
   const [activeRouteID, setActiveRouteID] = useState(0);
 
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("../Map"), {
-        ssr: false,
-      }),
-    []
-  );
+  const Map = useMapContainer();
 
   const handleAddBusStop = (name: string) => {
     const selectedBusStop = busStops?.find((busStop) => busStop.name === name);
@@ -293,11 +287,12 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
               border: (theme) => theme.border.primary,
             }}
           >
-            <Typography variant="h6" textAlign="center" m={1}>
+            <Typography variant="h5" textAlign="center" m={1}>
               Linia:
             </Typography>
 
             <TextField
+              autoFocus
               variant="standard"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -306,28 +301,29 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
                 width: "5rem",
                 input: {
                   pr: 1,
+                  pb: 0,
                   textAlign: "right",
-                  fontSize: "1.5rem",
+                  fontSize: "1.7rem",
                 },
               }}
             />
           </Stack>
 
-            <NewRoutes
-              activeRouteID={activeRouteID}
-              routes={routes}
-              setRoutes={setRoutes}
-              setActiveRouteID={setActiveRouteID}
-            />
+          <NewRoutes
+            activeRouteID={activeRouteID}
+            routes={routes}
+            setRoutes={setRoutes}
+            setActiveRouteID={setActiveRouteID}
+          />
         </Stack>
       </Grid>
 
       <Grid item xs lg="auto" height={{ xs: 0.5, lg: 1.0 }}>
-          <NewRoute
-            activeRouteID={activeRouteID}
-            routes={routes}
-            setRoutes={setRoutes}
-          />
+        <NewRoute
+          activeRouteID={activeRouteID}
+          routes={routes}
+          setRoutes={setRoutes}
+        />
       </Grid>
 
       <Grid item xs={12} lg height={{ xs: 0.5, lg: 1.0 }}>

@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import dynamic from "next/dynamic";
+import { useState } from "react";
 import { trpc } from "utils/trpc";
 
 import Box from "@mui/material/Box";
@@ -8,6 +7,8 @@ import Dialog from "@mui/material/Dialog";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+
+import { useMapContainer } from "components/Misc";
 
 import type { BusStop } from "@prisma/client";
 
@@ -29,13 +30,7 @@ const NewBusStop = ({
     editing ? [editing.gpsX, editing.gpsY] : undefined
   );
 
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("../Map"), {
-        ssr: false,
-      }),
-    [editing]
-  );
+  const Map = useMapContainer([editing]);
 
   const handleSelected = (name: string) => {
     const selected = busStops?.find((x) => x.name === name);

@@ -7,7 +7,7 @@ import { useRouter } from "next/dist/client/router";
 import dynamic from "next/dynamic";
 import type { NextPage } from "next";
 
-import { MainLayout } from "components/Layouts";
+import { MainLayout, useMapContainer } from "components/Misc";
 import List from "components/List";
 import LineCard from "components/line/LineCard";
 import ScheduleEditor from "components/dialogs/ScheduleEditor";
@@ -28,13 +28,7 @@ const LinesPage: NextPage = () => {
 
   const [showSchedule, setShowSchedule] = useState(0);
 
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("../../components/Map"), {
-        ssr: false,
-      }),
-    []
-  );
+  const Map = useMapContainer();
 
   return (
     <MainLayout title="Lista linii">

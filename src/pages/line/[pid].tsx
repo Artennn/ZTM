@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useSession } from "next-auth/react";
 
-import { MainLayout } from "components/Layouts";
+import { MainLayout } from "components/Misc";
 import LineEditor from "components/line/LineEditor";
 
 import { prisma } from "server/db/client";

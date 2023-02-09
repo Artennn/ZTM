@@ -30,3 +30,18 @@ export const MainLayout = ({
     </>
   );
 };
+
+import dynamic from "next/dynamic";
+import { DependencyList, useMemo } from "react";
+
+export const useMapContainer = (deps?: DependencyList) => {
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("./Map"), {
+        ssr: false,
+      }),
+    deps || []
+  );
+
+  return Map;
+};

@@ -1,4 +1,4 @@
-import { MainLayout } from "components/Layouts";
+import { MainLayout } from "components/Misc";
 import BusStops from "components/BusStops";
 
 import { type NextPage } from "next";
