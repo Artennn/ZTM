@@ -30,7 +30,7 @@ const LinesPage: NextPage = () => {
   return (
     <MainLayout title="Lista linii">
       <Grid container spacing={2} sx={{ height: "100vh" }}>
-        <Grid item md={3}>
+        <Grid item xs={12} md="auto" height={{ xs: 0.5, md: 1.0 }}>
           <List
             title="Linie"
             isLoading={linesLoading}
@@ -58,7 +58,7 @@ const LinesPage: NextPage = () => {
           />
         </Grid>
 
-        <Grid item md>
+        <Grid item xs md height={{ xs: 0.5, md: 1.0 }}>
           <MapContainer
             scrollWhell
             busStops={busStops}

@@ -31,65 +31,65 @@ const LineCard = ({
   const [expanded, setExpanded] = useState(false);
 
   return (
-      <Paper
-        onClick={() => onSelect(line.id)}
-        sx={{
-          borderRadius: 2,
-          mt: 2,
-          p: 1,
-          cursor: "pointer",
-          background: selected
-            ? (theme) => theme.gradient.selected
-            : (theme) => theme.gradient.primary,
-          "&:hover": {
-            background: (theme) => theme.gradient.hover,
-          },
-        }}
-      >
-        <Stack direction="column">
-          <Stack direction="row" justifyContent="space-between">
-            <Typography>{line.name}</Typography>
+    <Paper
+      onClick={() => onSelect(line.id)}
+      sx={{
+        borderRadius: 2,
+        mt: 2,
+        p: 1,
+        cursor: "pointer",
+        background: selected
+          ? (theme) => theme.gradient.selected
+          : (theme) => theme.gradient.primary,
+        "&:hover": {
+          background: (theme) => theme.gradient.hover,
+        },
+      }}
+    >
+      <Stack direction="column">
+        <Stack direction="row" justifyContent="space-between">
+          <Typography fontSize={25}>{line.name}</Typography>
 
-            <IconButton size="small" onClick={() => setExpanded(!expanded)}>
-              {expanded ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
-          </Stack>
-
-          <Collapse in={expanded} unmountOnExit>
-            <Typography>Kierunki:</Typography>
-
-            {line.routes.map((route, key) => (
-              <Typography key={key} color={RouteColors[key] || "red"}>
-                {route.name}
-              </Typography>
-            ))}
-
-            <Stack direction="row" justifyContent="space-between" mt={1}>
-              <Button size="small" variant="contained" color="error">
-                Usun
-              </Button>
-
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => router.push(`/line/${line.id}`)}
-              >
-                Edytuj
-              </Button>
-
-              <Button
-                size="small"
-                variant="contained"
-                color="success"
-              onClick={() => onShowSchedule(line.id)}
-              >
-                Rozklad
-              </Button>
-            </Stack>
-          </Collapse>
+          <IconButton size="small" onClick={() => setExpanded(!expanded)}>
+            {expanded ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
         </Stack>
-      </Paper>
+
+        <Collapse in={expanded} unmountOnExit>
+          <Typography>Kierunki:</Typography>
+
+          {line.routes.map((route, key) => (
+            <Typography key={key} color={RouteColors[key] || "red"}>
+              {route.name}
+            </Typography>
+          ))}
+
+          <Stack direction="row" justifyContent="space-between" mt={1}>
+            <Button size="small" variant="contained" color="error">
+              Usun
+            </Button>
+
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={() => router.push(`/line/${line.id}`)}
+            >
+              Edytuj
+            </Button>
+
+            <Button
+              size="small"
+              variant="contained"
+              color="success"
+              onClick={() => onShowSchedule(line.id)}
+            >
+              Rozklad
+            </Button>
+          </Stack>
+        </Collapse>
+      </Stack>
+    </Paper>
   );
 };
 export default LineCard;

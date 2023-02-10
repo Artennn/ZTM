@@ -83,6 +83,7 @@ const NewRoutes = ({
   return (
     <List
       title="Kierunki"
+      flexGrow
       items={routes.map((route, key) => ({
         filterBy: route.name,
         component: (

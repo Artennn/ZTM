@@ -160,9 +160,10 @@ const BusStops = () => {
 
   return (
     <Grid container spacing={2} sx={{ height: "100vh" }}>
-      <Grid item md={3} height="100%">
+      <Grid item xs={12} md="auto" height={{ xs: 0.5, md: 1.0 }}>
         <List
           title="Przystanki"
+          minWidth="20rem"
           isLoading={isLoading}
           options={busStops?.map((busStop) => busStop.name)}
           items={busStops?.map((busStop, key) => ({
@@ -182,7 +183,7 @@ const BusStops = () => {
         />
       </Grid>
 
-      <Grid item sm>
+      <Grid item xs md height={{ xs: 0.5, md: 1.0 }}>
         <MapContainer
           scrollWhell
           busStops={busStops}

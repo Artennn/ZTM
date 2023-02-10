@@ -40,11 +40,14 @@ const SideBar = () => {
   return (
     <Stack
       direction="column"
-      height="100vh"
       width={open ? 200 : 70}
       p={1}
       spacing={1}
-      sx={{ transition: "width 1s", overflowX: "hidden" }}
+      sx={{
+        transition: "width 1s",
+        overflowX: "hidden",
+        border: (theme) => theme.border.primary,
+      }}
     >
       <Stack direction="row">
         <Box

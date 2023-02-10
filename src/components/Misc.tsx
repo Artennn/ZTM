@@ -19,10 +19,23 @@ export const MainLayout = ({
       </Head>
 
       <main>
-        <Stack direction="row">
+        <Stack
+          direction="row"
+          spacing={1}
+          p={1}
+          sx={{
+            mr: {
+              xl: "auto",
+            },
+            ml: {
+              xl: "auto",
+            },
+            maxWidth: 1920,
+          }}
+        >
           <SideBar />
 
-          <Box width="100%" p={1}>
+          <Box width="100%" sx={{ overflowY: "auto" }}>
             {children}
           </Box>
         </Stack>

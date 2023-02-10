@@ -18,6 +18,8 @@ const List = ({
   items = [],
   actionGroup,
   noAutoFocus: noFocus,
+  flexGrow,
+  minWidth,
   sx,
 }: {
   title: string;
@@ -29,6 +31,8 @@ const List = ({
   }[];
   actionGroup?: ReactNode;
   noAutoFocus?: boolean;
+  flexGrow?: boolean;
+  minWidth?: string;
   sx?: SxProps;
 }) => {
   const [value, setValue] = useState("");
@@ -42,8 +46,9 @@ const List = ({
       sx={{
         p: 1,
         height: 1,
-        minWidth: "35vmin",
+        minWidth: minWidth || "18rem",
         border: (theme) => theme.border.primary,
+        ...(flexGrow && { height: 0, flexGrow: 1 }),
         ...sx,
       }}
     >
@@ -57,7 +62,7 @@ const List = ({
           options={options}
           inputValue={value}
           onInputChange={(_, newValue) => setValue(newValue)}
-          sx={{ pl: 1, pr: 1, mb: 1.5 }}
+          sx={{ pl: 1, pr: 1 }}
           renderInput={(params) => (
             <TextField
               label="Szukaj"
@@ -77,7 +82,7 @@ const List = ({
         />
       )}
 
-      <Stack direction="column" sx={{ overflowY: "auto", height: 1 }}>
+      <Stack direction="column" sx={{ overflowY: "auto", height: 1, mt: 1.5 }}>
         {isLoading && (
           <Box alignSelf="center" mt={3}>
             <CircularProgress size={60} />
