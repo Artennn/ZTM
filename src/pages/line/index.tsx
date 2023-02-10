@@ -77,12 +77,12 @@ const LinesPage: NextPage = () => {
         </Grid>
       </Grid>
 
-      {showSchedule && (
+      {showSchedule ? (
         <ScheduleEditor
           lineID={showSchedule}
           onClose={() => setShowSchedule(0)}
         />
-      )}
+      ) : null}
     </MainLayout>
   );
 };
