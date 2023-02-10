@@ -38,18 +38,7 @@ const MapControl = ({ onClick }: { onClick: (gps: LatLng) => void }) => {
   return null;
 };
 
-const Map = ({
-  center,
-  zoom,
-  scrollWhell,
-  doubleClick,
-  busStops,
-  routes,
-  selectedBusStop,
-  selectedPos,
-  onClick,
-  onBusStopSelect,
-}: {
+export interface MapProps {
   center?: [number, number];
   zoom?: number;
   doubleClick?: boolean;
@@ -64,7 +53,20 @@ const Map = ({
   selectedPos?: [number, number];
   onClick?: (gps: [number, number]) => void;
   onBusStopSelect?: (name: string) => void;
-}) => {
+}
+
+const Map = ({
+  center,
+  zoom,
+  scrollWhell,
+  doubleClick,
+  busStops,
+  routes,
+  selectedBusStop,
+  selectedPos,
+  onClick,
+  onBusStopSelect,
+}: MapProps) => {
   const polyLines = routes?.map((route) => ({
     ...route,
     stops: route.stops.map(

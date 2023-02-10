@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-import { useMapContainer } from "components/Misc";
+import { MapContainer } from "components/Misc";
 
 import type { BusStop } from "@prisma/client";
 
@@ -29,8 +29,6 @@ const NewBusStop = ({
   const [GPS, setGPS] = useState<[number, number] | undefined>(
     editing ? [editing.gpsX, editing.gpsY] : undefined
   );
-
-  const Map = useMapContainer([editing]);
 
   const handleSelected = (name: string) => {
     const selected = busStops?.find((x) => x.name === name);
@@ -74,7 +72,7 @@ const NewBusStop = ({
         </Typography>
 
         <Box width={750} height={500}>
-          <Map
+          <MapContainer
             scrollWhell
             zoom={editing ? 17 : undefined}
             center={editing ? GPS : undefined}

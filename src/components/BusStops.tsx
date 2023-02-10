@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import Grid from "@mui/material/Grid";
@@ -16,7 +15,7 @@ import { trpc } from "utils/trpc";
 import List from "./List";
 import NewBusStop from "./dialogs/NewBusStop";
 import Schedule from "./dialogs/Schedule";
-import { useMapContainer } from "./Misc";
+import { MapContainer } from "./Misc";
 
 import type { BusStop } from "@prisma/client";
 
@@ -88,7 +87,7 @@ const BusStopCard = ({
         </Stack>
 
         <Collapse in={expanded}>
-          <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" justifyContent="space-between" mt={1}>
             <Button
               variant="contained"
               size="small"
@@ -131,8 +130,6 @@ const BusStops = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [editing, setEditing] = useState<BusStop>();
   const [showSchedule, setShowSchedule] = useState<BusStop>();
-
-  const Map = useMapContainer([selected]);
 
   const handleSelect = (name: string) => {
     const stop = busStops?.find((x) => x.name === name);
@@ -185,18 +182,16 @@ const BusStops = () => {
         />
       </Grid>
 
-      <Grid item md>
-        <Box p={1} height="100%" position="relative">
-          <Map
-            scrollWhell
-            busStops={busStops}
-            selectedBusStop={selected}
-            zoom={selected ? 16 : undefined}
-            center={selected ? [selected.gpsX, selected.gpsY] : undefined}
-            onBusStopSelect={handleSelect}
-          />
-
-          <Box position="absolute" right={25} bottom={35} zIndex={500}>
+      <Grid item sm>
+        <MapContainer
+          scrollWhell
+          busStops={busStops}
+          selectedBusStop={selected}
+          zoom={selected ? 16 : undefined}
+          center={selected ? [selected.gpsX, selected.gpsY] : undefined}
+          onBusStopSelect={handleSelect}
+          deps={[selected]}
+          actionGroup={
             <Button
               variant="contained"
               color="success"
@@ -204,8 +199,8 @@ const BusStops = () => {
             >
               Nowy
             </Button>
-          </Box>
-        </Box>
+          }
+        />
       </Grid>
 
       {isAdding && <NewBusStop onClose={() => setIsAdding(false)} />}

@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/dist/client/router";
 
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -18,7 +17,7 @@ import { z } from "zod";
 
 import { RouteColors } from "styles/theme";
 import List from "components/List";
-import { useMapContainer } from "components/Misc";
+import { MapContainer } from "components/Misc";
 
 import type { FullLine } from "types/line";
 
@@ -235,8 +234,6 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
 
   const [activeRouteID, setActiveRouteID] = useState(0);
 
-  const Map = useMapContainer();
-
   const handleAddBusStop = (name: string) => {
     const selectedBusStop = busStops?.find((busStop) => busStop.name === name);
     if (!selectedBusStop) return;
@@ -327,20 +324,17 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
       </Grid>
 
       <Grid item xs={12} lg height={{ xs: 0.5, lg: 1.0 }}>
-        <Box height="100%" position="relative">
-          <Map
-            scrollWhell
-            busStops={busStops}
-            onBusStopSelect={handleAddBusStop}
-            routes={routes.map((route, key) => ({
-              color: RouteColors[key] || "pink",
-              label: route.name || undefined,
-              stops: route.entries.map((entry) => entry.busStop),
-            }))}
-          />
-
-          <Box position="absolute" right={25} bottom={35} zIndex={500}>
-            <Stack direction="row" spacing={2}>
+        <MapContainer
+          scrollWhell
+          busStops={busStops}
+          onBusStopSelect={handleAddBusStop}
+          routes={routes.map((route, key) => ({
+            color: RouteColors[key] || "pink",
+            label: route.name || undefined,
+            stops: route.entries.map((entry) => entry.busStop),
+          }))}
+          actionGroup={
+            <>
               <Button variant="contained" color="error" onClick={handleCancel}>
                 Anuluj
               </Button>
@@ -352,9 +346,9 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
               >
                 Zapisz
               </Button>
-            </Stack>
-          </Box>
-        </Box>
+            </>
+          }
+        />
       </Grid>
     </Grid>
   );

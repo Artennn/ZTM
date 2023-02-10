@@ -1,13 +1,12 @@
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/dist/client/router";
-import dynamic from "next/dynamic";
 import type { NextPage } from "next";
 
-import { MainLayout, useMapContainer } from "components/Misc";
+import { MainLayout, MapContainer } from "components/Misc";
 import List from "components/List";
 import LineCard from "components/line/LineCard";
 import ScheduleEditor from "components/dialogs/ScheduleEditor";
@@ -27,8 +26,6 @@ const LinesPage: NextPage = () => {
   const { data: selectedLine } = trpc.line.get.useQuery(selectedLineID);
 
   const [showSchedule, setShowSchedule] = useState(0);
-
-  const Map = useMapContainer();
 
   return (
     <MainLayout title="Lista linii">
@@ -62,7 +59,7 @@ const LinesPage: NextPage = () => {
         </Grid>
 
         <Grid item md>
-          <Map
+          <MapContainer
             scrollWhell
             busStops={busStops}
             routes={
