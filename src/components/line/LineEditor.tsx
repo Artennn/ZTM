@@ -18,6 +18,7 @@ import { z } from "zod";
 import { RouteColors } from "styles/theme";
 import List from "components/List";
 import { MapContainer } from "components/Misc";
+import SelectDialog from "components/dialogs/Select";
 
 import type { FullLine } from "types/line";
 
@@ -142,12 +143,17 @@ const NewRoute = ({
   activeRouteID,
   routes,
   setRoutes,
+  onSelect,
 }: {
   activeRouteID: number;
   routes: NewLine["routes"];
   setRoutes: (routes: NewLine["routes"]) => void;
+  onSelect: (id: number) => void;
 }) => {
   const activeRoute = routes[activeRouteID];
+  const [selecting, setSelecting] = useState(false);
+
+  const { data: busStops } = trpc.busStop.get.useQuery();
 
   const handleRemoveBusStop = (id: number) => {
     const updatedRoutes = [...routes];
@@ -172,54 +178,81 @@ const NewRoute = ({
   };
 
   return (
-    <List
-      title="Trasa"
-      noAutoFocus
-      options={activeRoute?.entries.map((entry) => entry.busStop.name) || []}
-      items={activeRoute?.entries.map((entry, key) => ({
-        filterBy: entry.busStop.name,
-        component: (
-          <Paper sx={{ p: 1, mb: 2 }}>
-            <Stack direction="row" spacing="auto">
-              <Typography variant="subtitle1">{entry.busStop.name}</Typography>
+    <>
+      <List
+        title="Trasa"
+        noAutoFocus
+        options={activeRoute?.entries.map((entry) => entry.busStop.name) || []}
+        items={activeRoute?.entries.map((entry, key) => ({
+          filterBy: entry.busStop.name,
+          component: (
+            <Paper sx={{ p: 1, mb: 2 }}>
+              <Stack direction="row" spacing="auto">
+                <Typography variant="subtitle1">
+                  {entry.busStop.name}
+                </Typography>
 
-              <TextField
-                variant="standard"
-                size="small"
-                sx={{ width: "2rem", input: { textAlign: "center" } }}
-                value={entry.estimatedTime}
-                onChange={(e) => handleChangeEstimatedTime(key, e.target.value)}
-              />
-            </Stack>
+                <TextField
+                  variant="standard"
+                  size="small"
+                  sx={{ width: "2rem", input: { textAlign: "center" } }}
+                  value={entry.estimatedTime}
+                  onChange={(e) =>
+                    handleChangeEstimatedTime(key, e.target.value)
+                  }
+                />
+              </Stack>
 
-            <Stack direction="row" spacing="auto" marginTop={2}>
-              <Button
-                variant="contained"
-                size="small"
-                color="error"
-                startIcon={<DeleteIcon />}
-                onClick={() => handleRemoveBusStop(entry.busStop.name)}
-              >
-                Usun
-              </Button>
+              <Stack direction="row" spacing="auto" marginTop={2}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => handleRemoveBusStop(entry.busStop.id)}
+                >
+                  Usun
+                </Button>
 
-              <Button
-                variant="contained"
-                size="small"
-                endIcon={<ImportExportIcon />}
-              >
-                Przenies
-              </Button>
-            </Stack>
-          </Paper>
-        ),
-      }))}
-      actionGroup={
-        <Button variant="contained" color="success">
-          Dodaj Przystanek
-        </Button>
-      }
-    />
+                <Button
+                  variant="contained"
+                  size="small"
+                  endIcon={<ImportExportIcon />}
+                >
+                  Przenies
+                </Button>
+              </Stack>
+            </Paper>
+          ),
+        }))}
+        actionGroup={
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setSelecting(true)}
+          >
+            Dodaj Przystanek
+          </Button>
+        }
+      />
+
+      {selecting ? (
+        <SelectDialog
+          title="Wybierz Przystanek"
+          options={
+            busStops?.map((busStop) => ({
+              id: busStop.id,
+              name: busStop.name,
+              disabled: !!activeRoute?.entries.find(
+                (entry) => entry.busStop.id === busStop.id
+              ),
+            })) || []
+          }
+          onSelect={onSelect}
+          onClose={() => setSelecting(false)}
+        />
+      ) : null}
+    </>
   );
 };
 
@@ -321,6 +354,7 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
           activeRouteID={activeRouteID}
           routes={routes}
           setRoutes={setRoutes}
+          onSelect={handleAddBusStop}
         />
       </Grid>
 
