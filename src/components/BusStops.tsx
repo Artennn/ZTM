@@ -29,7 +29,7 @@ const BusStopCard = ({
 }: {
   busStop: BusStop;
   selected: boolean;
-  onSelect: (name: string) => void;
+  onSelect: (id: number) => void;
   onEdit: (id: number) => void;
   onShowSchedule: (id: number) => void;
   onDelete: (id: number) => void;
@@ -38,7 +38,7 @@ const BusStopCard = ({
 
   const handleSelected = () => {
     if (!expanded) setExpanded(true);
-    onSelect(busStop.name);
+    onSelect(busStop.id);
   };
 
   const handleExpanded = (e: MouseEvent<HTMLElement>) => {
@@ -131,8 +131,8 @@ const BusStops = () => {
   const [editing, setEditing] = useState<BusStop>();
   const [showSchedule, setShowSchedule] = useState<BusStop>();
 
-  const handleSelect = (name: string) => {
-    const stop = busStops?.find((x) => x.name === name);
+  const handleSelect = (id: number) => {
+    const stop = busStops?.find((x) => x.id === id);
     if (!stop) return;
     if (selected === stop) return;
     setSelected(stop);

@@ -52,7 +52,7 @@ export interface MapProps {
   selectedBusStop?: BusStop;
   selectedPos?: [number, number];
   onClick?: (gps: [number, number]) => void;
-  onBusStopSelect?: (name: string) => void;
+  onBusStopSelect?: (id: number) => void;
 }
 
 const Map = ({
@@ -105,7 +105,7 @@ const Map = ({
                 variant="contained"
                 color="success"
                 size="small"
-                onClick={() => onBusStopSelect && onBusStopSelect(busStop.name)}
+                onClick={() => onBusStopSelect && onBusStopSelect(busStop.id)}
               >
                 Wybierz
               </Button>

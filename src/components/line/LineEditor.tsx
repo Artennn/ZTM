@@ -149,13 +149,13 @@ const NewRoute = ({
 }) => {
   const activeRoute = routes[activeRouteID];
 
-  const handleRemoveBusStop = (name: string) => {
+  const handleRemoveBusStop = (id: number) => {
     const updatedRoutes = [...routes];
     const updatedRoute = updatedRoutes[activeRouteID];
     if (!updatedRoute) return;
 
     updatedRoute.entries = updatedRoute.entries.filter(
-      (entry) => entry.busStop.name !== name
+      (entry) => entry.busStop.id !== id
     );
     setRoutes(updatedRoutes);
   };
@@ -235,8 +235,8 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
 
   const [activeRouteID, setActiveRouteID] = useState(0);
 
-  const handleAddBusStop = (name: string) => {
-    const selectedBusStop = busStops?.find((busStop) => busStop.name === name);
+  const handleAddBusStop = (id: number) => {
+    const selectedBusStop = busStops?.find((busStop) => busStop.id === id);
     if (!selectedBusStop) return;
 
     const updatedRoutes = [...routes];

@@ -30,8 +30,8 @@ const NewBusStop = ({
     editing ? [editing.gpsX, editing.gpsY] : undefined
   );
 
-  const handleSelected = (name: string) => {
-    const selected = busStops?.find((x) => x.name === name);
+  const handleSelected = (id: number) => {
+    const selected = busStops?.find((x) => x.id === id);
     if (!selected) return;
     setEditing(selected);
     setName(selected.name);
