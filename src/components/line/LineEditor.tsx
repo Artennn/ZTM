@@ -7,10 +7,12 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Send";
-import ImportExportIcon from "@mui/icons-material/ImportExport";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 import { trpc } from "utils/trpc";
 import { z } from "zod";
@@ -177,6 +179,40 @@ const NewRoute = ({
     setRoutes(updatedRoutes);
   };
 
+  const handleChangeOrder = (entryID: number, reverse: boolean) => {
+    const updatedRoutes = [...routes];
+    const updatedEntries = updatedRoutes[activeRouteID]?.entries;
+    if (!updatedEntries) return;
+
+    const swapWithID = reverse ? entryID - 1 : entryID + 1;
+
+    // first => last
+    if (swapWithID < 0) {
+      const entry = updatedEntries.shift();
+      if (!entry) return;
+      updatedEntries.push(entry);
+      setRoutes(updatedRoutes);
+      return;
+    }
+
+    // last => first
+    if (swapWithID > updatedEntries.length - 1) {
+      const entry = updatedEntries.pop();
+      if (!entry) return;
+      updatedEntries.unshift(entry);
+      setRoutes(updatedRoutes);
+      return;
+    }
+
+    // swap
+    const entry = updatedEntries[entryID];
+    const swapWith = updatedEntries[swapWithID];
+    if (!entry || !swapWith) return;
+
+    [updatedEntries[entryID], updatedEntries[swapWithID]] = [swapWith, entry];
+    setRoutes(updatedRoutes);
+  };
+
   return (
     <>
       <List
@@ -214,13 +250,15 @@ const NewRoute = ({
                   Usun
                 </Button>
 
-                <Button
-                  variant="contained"
-                  size="small"
-                  endIcon={<ImportExportIcon />}
-                >
-                  Przenies
-                </Button>
+                <Stack direction="row">
+                  <IconButton onClick={() => handleChangeOrder(key, true)}>
+                    <ArrowUpwardIcon />
+                  </IconButton>
+
+                  <IconButton onClick={() => handleChangeOrder(key, false)}>
+                    <ArrowDownwardIcon />
+                  </IconButton>
+                </Stack>
               </Stack>
             </Paper>
           ),
