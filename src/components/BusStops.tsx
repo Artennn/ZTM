@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-import { type MouseEvent, useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useState, useRef } from "react";
 import { trpc } from "utils/trpc";
 
 import List from "./List";
@@ -34,12 +34,8 @@ const BusStopCard = ({
   onShowSchedule: (id: number) => void;
   onDelete: (id: number) => void;
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
-
-  const handleSelected = () => {
-    if (!expanded) setExpanded(true);
-    onSelect(busStop.id);
-  };
 
   const handleExpanded = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
@@ -49,8 +45,13 @@ const BusStopCard = ({
   useEffect(() => {
     // got selected, should expand
     if (selected && !expanded) {
+      ref.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       return setExpanded(true);
     }
+
     // got unselected, should shrink
     if (!selected && expanded) {
       return setExpanded(false);
@@ -59,7 +60,8 @@ const BusStopCard = ({
 
   return (
     <Paper
-      onClick={handleSelected}
+      ref={ref}
+      onClick={() => onSelect(busStop.id)}
       sx={{
         borderRadius: 2,
         mt: 2,
