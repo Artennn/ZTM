@@ -14,7 +14,7 @@ const toDisplay = (value: number): string => {
   const hh = Math.floor(value / 60)
     .toString()
     .padStart(2, "0");
-  const mm = (value % 60).toString().padEnd(2, "0");
+  const mm = (value % 60).toString().padStart(2, "0");
   return `${hh}:${mm}`;
 };
 

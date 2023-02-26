@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt({ token, user }) {
-      console.log({ token });
+      //console.log({ token });
       if (user?.id) {
         token.id = user.id;
       }
@@ -28,6 +28,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  //debug: true,
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({

@@ -1,12 +1,13 @@
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
-
+import { SessionProvider } from "next-auth/react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+
 import { darkTheme } from "styles/theme";
 
 import { trpc } from "../utils/trpc";
+
+import { type AppType } from "next/app";
+import { type Session } from "next-auth";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

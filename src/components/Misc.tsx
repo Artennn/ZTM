@@ -1,9 +1,10 @@
 import Head from "next/head";
-import Stack from "@mui/material/Stack";
-import SideBar from "./SideBar";
-
 import type { ReactNode } from "react";
+
+import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+
+import SideBar from "./SideBar";
 
 export const MainLayout = ({
   title = "System ZTM",
@@ -22,6 +23,7 @@ export const MainLayout = ({
         <Stack
           direction="row"
           spacing={1}
+          height="100vh"
           p={1}
           sx={{
             mr: {

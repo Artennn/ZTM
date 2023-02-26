@@ -362,6 +362,7 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
 
             <TextField
               autoFocus
+              disabled={!!line}
               variant="standard"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -373,6 +374,9 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
                   pb: 0,
                   textAlign: "right",
                   fontSize: "1.7rem",
+                },
+                ".Mui-disabled": {
+                  WebkitTextFillColor: (theme) => theme.palette.text.primary,
                 },
               }}
             />

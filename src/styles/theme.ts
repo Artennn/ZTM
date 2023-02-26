@@ -39,9 +39,6 @@ declare module "@mui/material/styles" {
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    text: {
-      disabled: "white",
-    },
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
