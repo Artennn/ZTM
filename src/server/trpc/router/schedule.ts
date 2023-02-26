@@ -69,10 +69,14 @@ export const scheduleRouter = router({
         lineName: route.Line.name,
         routeID: route.id,
         name: route.name,
-        timeOffset: route.entries.reduce<number>(
-          (prev, curr) => prev + curr.estimatedTime,
-          0.0
-        ),
+        timeOffset: (() => {
+          let offset = 0;
+          for (const entry of route.entries) {
+            offset += entry.estimatedTime;
+            if (entry.busStopID === input) break;
+          }
+          return offset;
+        })(),
       }));
 
       const withDepartues = await Promise.all(

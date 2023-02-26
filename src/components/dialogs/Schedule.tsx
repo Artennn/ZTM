@@ -35,6 +35,7 @@ const Schedule = ({
     .map((route) =>
       route.departures.map((departure) => ({
         ...departure,
+        time: departure.time + route.timeOffset,
         routeName: route.name,
         routeID: route.routeID,
         lineName: route.lineName,
