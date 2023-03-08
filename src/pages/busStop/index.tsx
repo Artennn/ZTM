@@ -1,17 +1,14 @@
-import { MainLayout } from "components/Misc";
-import BusStops from "components/BusStops";
-
-import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 
-const BusStopsPage: NextPage = () => {
+import BusStops from "components/BusStops";
+
+import type { Page } from "types/app";
+
+const BusStopsPage: Page = () => {
   useSession({ required: true });
 
-  return (
-    <MainLayout title="Lista przystanków">
-      <BusStops />
-    </MainLayout>
-  );
+  return <BusStops />;
 };
+BusStopsPage.title = "Przystanki";
 
 export default BusStopsPage;

@@ -2,17 +2,19 @@ import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
-import { darkTheme } from "styles/theme";
-
 import { trpc } from "../utils/trpc";
+import { darkTheme } from "styles/theme";
+import { MainLayout } from "components/Misc";
 
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
+import type { AppProps } from "types/app";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: AppProps) => {
+  const Layout = Component.layout ? Component.layout : MainLayout;
+  const title = Component.title || "System ZTM";
+
   return (
     <SessionProvider session={session}>
       <Head>
@@ -22,7 +24,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Component {...pageProps} />
+
+        <Layout title={title}>
+          <Component {...pageProps} />
+        </Layout>
       </ThemeProvider>
     </SessionProvider>
   );

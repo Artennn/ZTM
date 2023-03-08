@@ -1,15 +1,10 @@
-import { MainLayout } from "components/Misc";
-import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
+import type { Page } from "types/app";
 
-const Home: NextPage = () => {
+const Home: Page = () => {
   useSession({ required: true });
 
-  return (
-    <MainLayout title="System ZTM">
-      <></>
-    </MainLayout>
-  );
+  return <></>;
 };
 
 export default Home;

@@ -1,23 +1,20 @@
-import type { GetServerSideProps, NextPage } from "next";
 import { useSession } from "next-auth/react";
 
-import { MainLayout } from "components/Misc";
 import LineEditor from "components/line/LineEditor";
 
 import { prisma } from "server/db/client";
 import { includeFullLine } from "server/trpc/router/line";
 
+import type { GetServerSideProps } from "next";
+import type { Page } from "types/app";
 import type { FullLine } from "types/line";
 
-const EditLinePage: NextPage<{ line: FullLine }> = ({ line }) => {
+const EditLinePage: Page<{ line: FullLine }> = ({ line }) => {
   useSession({ required: true });
 
-  return (
-    <MainLayout title="Stwórz nową linię">
-      <LineEditor line={line} />
-    </MainLayout>
-  );
+  return <LineEditor line={line} />;
 };
+EditLinePage.title = "Stwórz nową linię";
 
 export default EditLinePage;
 
