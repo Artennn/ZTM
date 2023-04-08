@@ -60,3 +60,30 @@ model BusStop {
   gpsY         Float
   routeEntries RouteEntry[]
 }
+
+model Driver {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(30)
+
+  vehicles Vehicle[]
+}
+
+enum VehicleStatus {
+  parked
+  enroute
+  service
+  emergency
+}
+
+model Vehicle {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(6) @unique
+  plate String @db.VarChar(10) @unique
+
+  posX Float
+  posY Float
+  status VehicleStatus
+
+  driverID Int
+  driver Driver? @relation(fields: [driverID], references: [id])
+}

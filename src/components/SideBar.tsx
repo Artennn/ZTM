@@ -24,7 +24,7 @@ const SideBarItems = [
   { label: "Linie", icon: RouteIcon, href: "/line" },
   { label: "Przystanki", icon: RoomIcon, href: "/busStop" },
   { label: "Kierowcy", icon: PersonIcon, href: "/driver" },
-  { label: "Pojazdy", icon: DirectionsBusIcon, href: "/vehicles" },
+  { label: "Pojazdy", icon: DirectionsBusIcon, href: "/vehicle" },
   { label: "Ustawienia", icon: SettingsIcon, href: "/settings" },
 ];
 
