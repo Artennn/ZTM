@@ -188,11 +188,15 @@ const BusStops = () => {
       <Grid item xs md height={{ xs: 0.5, md: 1.0 }}>
         <MapContainer
           scrollWhell
-          busStops={busStops}
-          selectedBusStop={selected}
+          markers={busStops?.map((busStop) => ({
+            id: busStop.id,
+            text: busStop.name,
+            pos: [busStop.gpsX, busStop.gpsY],
+            selected: busStop.id === selected?.id,
+          }))}
           zoom={selected ? 16 : undefined}
           center={selected ? [selected.gpsX, selected.gpsY] : undefined}
-          onBusStopSelect={handleSelect}
+          onMarkerSelect={handleSelect}
           deps={[selected]}
           actionGroup={
             <Button

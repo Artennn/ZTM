@@ -28,6 +28,32 @@ import Stack from "@mui/material/Stack";
 
 import type { BusStop } from "@prisma/client";
 
+const SelectPopout = ({
+  id,
+  text,
+  onSelect,
+}: {
+  id: number;
+  text: string;
+  onSelect?: (id: number) => void;
+}) => {
+  return (
+    <Popup>
+      <Stack direction="column">
+        <Typography variant="subtitle2"> {text} </Typography>
+        <Button
+          variant="contained"
+          color="success"
+          size="small"
+          onClick={() => onSelect && onSelect(id)}
+        >
+          Wybierz
+        </Button>
+      </Stack>
+    </Popup>
+  );
+};
+
 const MapControl = ({ onClick }: { onClick: (gps: LatLng) => void }) => {
   useMapEvents({
     click: (e) => {
@@ -43,16 +69,20 @@ export interface MapProps {
   zoom?: number;
   doubleClick?: boolean;
   scrollWhell?: boolean;
-  busStops?: BusStop[];
   routes?: {
     label?: string;
     color?: string;
     stops: BusStop[];
   }[];
-  selectedBusStop?: BusStop;
   selectedPos?: [number, number];
+  markers?: {
+    id: number;
+    text: string;
+    pos: [number, number];
+    selected?: boolean;
+  }[];
   onClick?: (gps: [number, number]) => void;
-  onBusStopSelect?: (id: number) => void;
+  onMarkerSelect?: (id: number) => void;
 }
 
 const Map = ({
@@ -60,12 +90,11 @@ const Map = ({
   zoom,
   scrollWhell,
   doubleClick,
-  busStops,
   routes,
-  selectedBusStop,
   selectedPos,
+  markers,
   onClick,
-  onBusStopSelect,
+  onMarkerSelect,
 }: MapProps) => {
   const polyLines = routes?.map((route) => ({
     ...route,
@@ -90,27 +119,17 @@ const Map = ({
         cursor: onClick ? "crosshair" : "grab",
       }}
     >
-      {busStops?.map((busStop, key) => (
+      {markers?.map((marker, key) => (
         <Marker
-          position={[busStop.gpsX, busStop.gpsY]}
-          icon={
-            selectedBusStop?.id === busStop.id ? SelectedMarkerIcon : MarkerIcon
-          }
           key={key}
+          position={marker.pos}
+          icon={marker.selected ? SelectedMarkerIcon : MarkerIcon}
         >
-          <Popup>
-            <Stack direction="column">
-              <Typography variant="subtitle2"> {busStop.name} </Typography>
-              <Button
-                variant="contained"
-                color="success"
-                size="small"
-                onClick={() => onBusStopSelect && onBusStopSelect(busStop.id)}
-              >
-                Wybierz
-              </Button>
-            </Stack>
-          </Popup>
+          <SelectPopout
+            id={marker.id}
+            text={marker.text}
+            onSelect={onMarkerSelect}
+          />
         </Marker>
       ))}
 

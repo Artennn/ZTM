@@ -76,8 +76,14 @@ const NewBusStop = ({
             scrollWhell
             zoom={editing ? 17 : undefined}
             center={editing ? GPS : undefined}
-            onBusStopSelect={handleSelected}
-            busStops={busStops?.filter((x) => x.id !== editing?.id)}
+            markers={busStops
+              ?.filter((busStop) => busStop.id !== editing?.id)
+              ?.map((busStop) => ({
+                id: busStop.id,
+                text: busStop.name,
+                pos: [busStop.gpsX, busStop.gpsY],
+              }))}
+            onMarkerSelect={handleSelected}
             selectedPos={GPS}
             onClick={handleSelectPos}
           />

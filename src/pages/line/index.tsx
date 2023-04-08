@@ -61,7 +61,11 @@ const LinesPage: Page = () => {
       <Grid item xs md height={{ xs: 0.5, md: 1.0 }}>
         <MapContainer
           scrollWhell
-          busStops={busStops}
+          markers={busStops?.map((busStop) => ({
+            id: busStop.id,
+            text: busStop.name,
+            pos: [busStop.gpsX, busStop.gpsY],
+          }))}
           routes={
             selectedLine &&
             selectedLine.routes.map((route, key) => ({

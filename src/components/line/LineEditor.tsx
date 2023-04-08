@@ -403,8 +403,12 @@ const LineEditor = ({ line }: { line?: FullLine }) => {
       <Grid item xs={12} lg height={{ xs: 0.5, lg: 1.0 }}>
         <MapContainer
           scrollWhell
-          busStops={busStops}
-          onBusStopSelect={handleAddBusStop}
+          markers={busStops?.map((busStop) => ({
+            id: busStop.id,
+            text: busStop.name,
+            pos: [busStop.gpsX, busStop.gpsY],
+          }))}
+          onMarkerSelect={handleAddBusStop}
           routes={routes.map((route, key) => ({
             color: RouteColors[key] || "pink",
             label: route.name || undefined,
