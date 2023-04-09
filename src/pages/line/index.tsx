@@ -39,6 +39,7 @@ const LinesPage: Page = () => {
             filterBy: line.name,
             component: (
               <LineCard
+                key={line.id}
                 line={line}
                 selected={selectedLine?.id === line.id}
                 onSelect={(id) => setSelectedLineID(id)}
@@ -67,12 +68,13 @@ const LinesPage: Page = () => {
             pos: [busStop.gpsX, busStop.gpsY],
           }))}
           routes={
-            selectedLine &&
-            selectedLine.routes.map((route, key) => ({
-              label: route.name,
-              color: RouteColors[key] || "pink",
-              stops: route.entries.map((entry) => entry.busStop),
-            }))
+            (selectedLine &&
+              selectedLine.routes.map((route, key) => ({
+                label: route.name,
+                color: RouteColors[key] || "pink",
+                stops: route.entries.map((entry) => entry.busStop),
+              }))) ||
+            undefined
           }
         />
       </Grid>

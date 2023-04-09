@@ -33,10 +33,11 @@ const SelectDialog = ({
           title={title}
           flexGrow
           options={options.map((item) => item.name)}
-          items={options.map((item) => ({
+          items={options.map((item, key) => ({
             filterBy: item.name,
             component: (
               <Stack
+                key={key}
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"

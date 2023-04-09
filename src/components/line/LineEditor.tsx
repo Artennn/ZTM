@@ -222,7 +222,7 @@ const NewRoute = ({
         items={activeRoute?.entries.map((entry, key) => ({
           filterBy: entry.busStop.name,
           component: (
-            <Paper sx={{ p: 1, mb: 2 }}>
+            <Paper key={key} sx={{ p: 1, mb: 2 }}>
               <Stack direction="row" spacing="auto">
                 <Typography variant="subtitle1">
                   {entry.busStop.name}

@@ -141,10 +141,14 @@ const ScheduleEditor = ({
 
         <Tabs
           value={selectedRouteID}
-          onChange={(e, v) => setSelectedRouteID(v)}
+          onChange={(_, v) => setSelectedRouteID(v)}
         >
-          {line?.routes.map((route, key) => (
-            <Tab key={key} value={route.id} label={`Kierunek ${route.name}`} />
+          {line?.routes.map((route) => (
+            <Tab
+              key={route.id}
+              value={route.id}
+              label={`Kierunek ${route.name}`}
+            />
           ))}
         </Tabs>
 
@@ -158,10 +162,10 @@ const ScheduleEditor = ({
         >
           {Days.map((day, key) => (
             <Grid
+              key={key}
               item
               md
               height="100%"
-              key={key}
               borderRight={key !== 6 ? "4px solid grey" : "none"}
             >
               <Stack direction="column" height="100%">
@@ -186,7 +190,6 @@ const ScheduleEditor = ({
                     .map((entry, key) => (
                       <div key={key}>
                         <Chip
-                          key={key}
                           label={Time.toDisplay(entry.time)}
                           color={entry.id ? "success" : "primary"}
                           onDelete={() => handleDeleteEntry(entry)}

@@ -29,6 +29,7 @@ const VehiclesPage: Page = () => {
             filterBy: vehicle.name,
             component: (
               <VehicleCard
+                key={vehicle.id}
                 vehicle={vehicle}
                 selected={selected?.id === vehicle.id}
                 onSelect={(id) =>

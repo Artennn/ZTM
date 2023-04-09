@@ -62,11 +62,11 @@ const BusStopsPage: Page = () => {
           minWidth="20rem"
           isLoading={isLoading}
           options={busStops?.map((busStop) => busStop.name)}
-          items={busStops?.map((busStop, key) => ({
+          items={busStops?.map((busStop) => ({
             filterBy: busStop.name,
             component: (
               <BusStopCard
-                key={key}
+                key={busStop.id}
                 busStop={busStop}
                 selected={selected === busStop}
                 onSelect={handleSelect}

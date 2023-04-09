@@ -67,7 +67,7 @@ const Schedule = ({
         <Stack direction="row" ml={2} spacing={1}>
           {routes?.map((route, key) => (
             <Chip
-              key={key}
+              key={route.routeID}
               label={`${route.lineName} (${route.name})`}
               clickable
               onClick={() => handleSelect(route.routeID)}
@@ -93,10 +93,10 @@ const Schedule = ({
         >
           {Days.map((day, key) => (
             <Grid
+              key={key}
               item
               md
               height="100%"
-              key={key}
               borderRight={key !== 6 ? "4px solid grey" : "none"}
             >
               <Stack direction="column" height="100%">
@@ -121,7 +121,6 @@ const Schedule = ({
                     .map((entry, key) => (
                       <div key={key}>
                         <Chip
-                          key={key}
                           label={`${Time.toDisplay(entry.time)} (${
                             entry.lineName
                           })`}

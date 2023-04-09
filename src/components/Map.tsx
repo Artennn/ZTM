@@ -119,9 +119,9 @@ const Map = ({
         cursor: onClick ? "crosshair" : "grab",
       }}
     >
-      {markers?.map((marker, key) => (
+      {markers?.map((marker) => (
         <Marker
-          key={key}
+          key={marker.id}
           position={marker.pos}
           icon={marker.selected ? SelectedMarkerIcon : MarkerIcon}
         >

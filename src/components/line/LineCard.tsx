@@ -63,7 +63,7 @@ const LineCard = ({
           <Typography>Kierunki:</Typography>
 
           {line.routes.map((route, key) => (
-            <Typography key={key} color={RouteColors[key] || "red"}>
+            <Typography key={route.id} color={RouteColors[key] || "red"}>
               {route.name}
             </Typography>
           ))}
