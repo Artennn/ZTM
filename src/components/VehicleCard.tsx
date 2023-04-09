@@ -16,7 +16,8 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import PersonIcon from "@mui/icons-material/Person";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useScrollAndExpand } from "utils/hooks";
 
 import type { MouseEvent } from "react";
 import type { VehicleStatus } from "@prisma/client";
@@ -46,27 +47,12 @@ const VehicleCard = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
+  useScrollAndExpand(ref, selected, expanded, setExpanded);
 
   const handleExpanded = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     setExpanded(!expanded);
   };
-
-  useEffect(() => {
-    // got selected, should expand
-    if (selected && !expanded) {
-      ref.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-      return setExpanded(true);
-    }
-
-    // got unselected, should shrink
-    if (!selected && expanded) {
-      return setExpanded(false);
-    }
-  }, [selected]);
 
   return (
     <Paper

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useScrollAndExpand } from "utils/hooks";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -28,10 +29,13 @@ const LineCard = ({
   onShowSchedule: (id: number) => void;
 }) => {
   const router = useRouter();
+  const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
+  useScrollAndExpand(ref, !!selected, expanded, setExpanded);
 
   return (
     <Paper
+      ref={ref}
       onClick={() => onSelect(line.id)}
       sx={{
         borderRadius: 2,

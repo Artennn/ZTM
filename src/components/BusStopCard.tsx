@@ -8,7 +8,8 @@ import Stack from "@mui/material/Stack";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-import { type MouseEvent, useEffect, useState, useRef } from "react";
+import { type MouseEvent, useState, useRef } from "react";
+import { useScrollAndExpand } from "utils/hooks";
 
 import type { BusStop } from "@prisma/client";
 
@@ -29,27 +30,12 @@ const BusStopCard = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
+  useScrollAndExpand(ref, selected, expanded, setExpanded);
 
   const handleExpanded = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     setExpanded(!expanded);
   };
-
-  useEffect(() => {
-    // got selected, should expand
-    if (selected && !expanded) {
-      ref.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-      return setExpanded(true);
-    }
-
-    // got unselected, should shrink
-    if (!selected && expanded) {
-      return setExpanded(false);
-    }
-  }, [selected]);
 
   return (
     <Paper
