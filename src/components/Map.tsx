@@ -2,10 +2,9 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Polyline,
   Popup,
   useMapEvents,
-  Tooltip,
+  useMap,
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
@@ -34,6 +33,59 @@ const MapControl = ({ onClick }: { onClick: (gps: LatLng) => void }) => {
       onClick(e.latlng);
     },
   });
+
+  return null;
+};
+
+import "leaflet-routing-machine";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import { useEffect } from "react";
+
+const RouteControl = ({
+  waypoints,
+  color,
+}: {
+  waypoints: [number, number][];
+  color: string;
+}) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const route = L.Routing.control({
+      show: false,
+      addWaypoints: false,
+      waypointMode: "connect",
+      draggableWaypoints: false,
+      //fitSelectedRoutes: true,
+      /* createMarker: () => null, */
+
+      lineOptions: {
+        extendToWaypoints: true,
+        missingRouteTolerance: 1.0,
+        styles: [
+          {
+            color,
+          },
+        ],
+      },
+      waypoints: waypoints.map((waypoint) =>
+        L.latLng(waypoint[0], waypoint[1])
+      ),
+    }).addTo(map);
+
+    /* const route2 = L.Routing.line({
+      waypoints: waypoints.map((waypoint) =>
+        L.latLng(waypoint[0], waypoint[1])
+      ),
+    }); //.addTo(map); */
+
+    return () => {
+      console.log("remove");
+      if (!map?.removeLayer) return;
+      map.removeControl && map.removeControl(route);
+      //map.removeLayer(route2);
+    };
+  }, [map, waypoints]);
 
   return null;
 };
@@ -122,7 +174,7 @@ const Map = ({
         </Marker>
       )}
 
-      {polyLines?.map((polyLine, key) => (
+      {/* {polyLines?.map((polyLine, key) => (
         <Polyline
           key={key}
           positions={polyLine.stops}
@@ -134,9 +186,17 @@ const Map = ({
             </Tooltip>
           )}
         </Polyline>
-      ))}
+      ))} */}
 
       <MapControl onClick={handleOnClick} />
+
+      {polyLines?.map((polyLine, key) => (
+        <RouteControl
+          key={key}
+          waypoints={polyLine.stops}
+          color={polyLine.color || "pink"}
+        />
+      ))}
 
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
