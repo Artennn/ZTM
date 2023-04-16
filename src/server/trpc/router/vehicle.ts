@@ -11,6 +11,10 @@ export type VehicleWithDriver = Prisma.VehicleGetPayload<{
 }>;
 
 export const vehicleRouter = router({
+  get: protectedProcedure.query(async ({ ctx }) => {
+    const vehicles = await ctx.prisma.vehicle.findMany();
+    return vehicles;
+  }),
   getDriver: protectedProcedure
     .input(
       z
@@ -29,4 +33,11 @@ export const vehicleRouter = router({
       });
       return vehicles;
     }),
+  getStats: protectedProcedure.query(async ({ ctx }) => {
+    const stats = await ctx.prisma.vehicle.groupBy({
+      by: ["status"],
+      _count: true,
+    });
+    return stats;
+  }),
 });

@@ -19,11 +19,11 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useRef, useState } from "react";
 import { useScrollAndExpand } from "utils/hooks";
 
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import type { VehicleStatus } from "@prisma/client";
 import type { VehicleWithDriver } from "server/trpc/router/vehicle";
 
-const StatusIcons: Record<VehicleStatus, JSX.Element> = {
+export const StatusIcons: Record<VehicleStatus, ReactNode> = {
   parked: <LocalParkingIcon color="info" />,
   enroute: <AirportShuttleIcon color="success" />,
   service: <NoTransferIcon color="warning" />,
