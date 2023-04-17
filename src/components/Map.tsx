@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-import L, { type LatLng } from "leaflet";
+import L, { type LatLng, type Icon as LIcon } from "leaflet"
 
 const MarkerIcon = L.icon({
   iconUrl: "/busStop.png",
@@ -20,7 +20,25 @@ const SelectedMarkerIcon = L.icon({
   iconAnchor: [8, 8],
 });
 
+const VehicleMarkerIcon = L.icon({
+  iconUrl: "/vehicle.png",
+  iconAnchor: [17, 5],
+});
+const SelectedVehicleIcon = L.icon({
+  iconUrl: "/vehicle2.png",
+  iconAnchor: [17, 5],
+});
+
 L.Marker.prototype.options.icon = MarkerIcon;
+
+type Icon = "default" | "selected" | "vehicle" | "vehicleSelected";
+
+const MarkerIcons: Record<Icon, LIcon> = {
+  "default": MarkerIcon,
+  "selected": SelectedMarkerIcon,
+  "vehicle": VehicleMarkerIcon,
+  "vehicleSelected": SelectedVehicleIcon, 
+};
 
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -79,7 +97,7 @@ export interface MapProps {
     id: number;
     text: string;
     pos: [number, number];
-    selected?: boolean;
+    icon?: Icon;
   }[];
   onClick?: (gps: [number, number]) => void;
   onMarkerSelect?: (id: number) => void;
@@ -123,7 +141,7 @@ const Map = ({
         <Marker
           key={marker.id}
           position={marker.pos}
-          icon={marker.selected ? SelectedMarkerIcon : MarkerIcon}
+          icon={marker.icon && MarkerIcons[marker.icon] || MarkerIcon}
         >
           <SelectPopout
             id={marker.id}

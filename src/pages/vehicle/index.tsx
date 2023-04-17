@@ -62,9 +62,8 @@ const VehiclesPage: Page = () => {
           markers={vehicles?.map((vehicle) => ({
             id: vehicle.id,
             text: `Pojazd: ${vehicle.name}`,
-            icon: "vehicle",
             pos: [vehicle.posX, vehicle.posY],
-            selected: selected?.id === vehicle.id,
+            icon: vehicle.id === selected?.id ? "vehicleSelected" : "vehicle",
           }))}
         />
       </Grid>

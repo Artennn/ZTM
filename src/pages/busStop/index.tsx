@@ -87,7 +87,7 @@ const BusStopsPage: Page = () => {
             id: busStop.id,
             text: busStop.name,
             pos: [busStop.gpsX, busStop.gpsY],
-            selected: busStop.id === selected?.id,
+            icon: busStop.id === selected?.id ? "selected" : "default",
           }))}
           zoom={selected ? 16 : undefined}
           center={selected ? [selected.gpsX, selected.gpsY] : undefined}
