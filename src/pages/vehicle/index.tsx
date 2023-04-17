@@ -4,7 +4,7 @@ import { trpc } from "utils/trpc";
 
 import List from "components/List";
 import { MapContainer } from "components/Misc";
-import VehicleCard from "components/VehicleCard";
+import VehicleCard, { Statuses, StatusIcons, StatusLabels } from "components/VehicleCard";
 
 import Grid from "@mui/material/Grid";
 
@@ -13,20 +13,37 @@ import type { Page } from "types/app";
 
 const VehiclesPage: Page = () => {
   useSession({ required: true });
+  const [filtered, setFiltered] = useState<string[]>([]);
   const [selected, setSelected] = useState<VehicleWithDriver>();
 
   const { isLoading, data: vehicles } = trpc.vehicle.getDriver.useQuery();
 
+  const handleFilterToggle = (key: string) => {
+    if (filtered.includes(key)) {
+      return setFiltered(filtered.filter(x => x !== key));
+    }
+    setFiltered([...filtered, key]);
+  }
+
+  const filteredVehicles = vehicles?.filter(vehicle => !filtered.includes(vehicle.status));
+
   return (
     <Grid container spacing={2} sx={{ height: "100vh" }}>
-      <Grid item xs={12} md="auto" height={{ xs: 0.5, md: 1.0 }}>
+      <Grid item xs={12} md={3} height={{ xs: 0.5, md: 1.0 }}>
         <List
           title="Pojazdy"
           minWidth="20rem"
           isLoading={isLoading}
           autocomplete
-          options={vehicles?.map((vehicle) => vehicle.name)}
-          items={vehicles?.map((vehicle) => ({
+          filters={Statuses.map(status => ({
+            key: status,
+            enabled: !filtered.includes(status),
+            label: StatusLabels[status],
+            icon: StatusIcons[status],
+          }))}
+          onFilterToggle={handleFilterToggle}
+          options={filteredVehicles?.map((vehicle) => vehicle.name)}
+          items={filteredVehicles?.map((vehicle) => ({
             filterBy: vehicle.name,
             component: (
               <VehicleCard
@@ -59,7 +76,7 @@ const VehiclesPage: Page = () => {
           zoom={selected ? 16 : undefined}
           center={selected ? [selected.posX, selected.posY] : undefined}
           deps={[selected]}
-          markers={vehicles?.map((vehicle) => ({
+          markers={filteredVehicles?.map((vehicle) => ({
             id: vehicle.id,
             text: `Pojazd: ${vehicle.name}`,
             pos: [vehicle.posX, vehicle.posY],

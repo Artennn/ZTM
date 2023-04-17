@@ -18,15 +18,9 @@ import BusAlertIcon from "@mui/icons-material/BusAlert";
 import { useSession } from "next-auth/react";
 import { trpc } from "utils/trpc";
 
-import type { Page } from "types/app";
-import type { VehicleStatus } from "@prisma/client";
+import { Statuses as VehStatuses, StatusIcons as VehIcons, StatusLabels as VehLabels } from "components/VehicleCard";
 
-const VehicleStatuses: { status: VehicleStatus; label: string }[] = [
-  { status: "enroute", label: "W trasie" },
-  { status: "parked", label: "Zaparkowany" },
-  { status: "service", label: "Trasa serwisowa" },
-  { status: "emergency", label: "Awaria" },
-];
+import type { Page } from "types/app";
 
 const Home: Page = () => {
   useSession({ required: true });
@@ -40,11 +34,11 @@ const Home: Page = () => {
         <StatCard
           title="Pojazdy"
           Icon={DirectionsBusIcon}
-          stats={VehicleStatuses.map((stat) => ({
-            key: stat.status,
-            icon: StatusIcons[stat.status],
-            label: stat.label,
-            count: vehicleStats?.find((x) => x.status === stat.status)?._count,
+          stats={VehStatuses.map((stat) => ({
+            key: stat,
+            icon: VehIcons[stat],
+            label: VehLabels[stat],
+            count: vehicleStats?.find((x) => x.status === stat)?._count,
           }))}
         />
       </Grid>

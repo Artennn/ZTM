@@ -30,6 +30,15 @@ export const StatusIcons: Record<VehicleStatus, ReactNode> = {
   emergency: <WarningAmberIcon color="error" />,
 };
 
+export const StatusLabels: Record<VehicleStatus, string> = {
+  parked: "W trasie",
+  enroute: "Zaparkowany",
+  service: "Trasa serwisowa",
+  emergency: "Awaria",
+};
+
+export const Statuses: VehicleStatus[] = ["parked", "enroute", "service", "emergency"];
+
 const VehicleCard = ({
   vehicle,
   selected,

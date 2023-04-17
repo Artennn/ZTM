@@ -5,16 +5,19 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
+import Chip from "@mui/material/Chip";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, type ReactElement } from "react";
 import type { SxProps } from "@mui/material";
 
 const List = ({
   title,
   isLoading,
   autocomplete,
+  filters,
+  onFilterToggle,
   options,
   items = [],
   actionGroup,
@@ -26,10 +29,17 @@ const List = ({
   title: string;
   isLoading?: boolean;
   autocomplete?: boolean;
+  filters?: {
+    key: string;
+    enabled: boolean;
+    label: string;
+    icon: ReactNode;
+  }[];
+  onFilterToggle: (key: string) => void;
   options?: string[];
   items?: {
     filterBy: string;
-    component: JSX.Element;
+    component: ReactNode;
   }[];
   actionGroup?: ReactNode;
   noAutoFocus?: boolean;
@@ -84,7 +94,21 @@ const List = ({
         />
       )}
 
-      <Stack direction="column" sx={{ overflowY: "auto", height: 1, mt: 1.5 }}>
+      {filters && (
+        <Stack direction="row" mt={1} gap={1} flexWrap="wrap">
+          {filters.map((filter) => (
+            <Chip
+              key={filter.key}
+              label={filter.label}
+              icon={filter.icon as ReactElement}
+              sx={{ opacity: filter.enabled ? 1.0 : 0.6, p: 0.5 }}
+              onClick={() => onFilterToggle && onFilterToggle(filter.key)}
+            />
+          ))}
+        </Stack>
+      )}
+
+      <Stack direction="column" sx={{ overflowY: "auto", height: 1 }}>
         {isLoading && (
           <Box alignSelf="center" mt={3}>
             <CircularProgress size={60} />
