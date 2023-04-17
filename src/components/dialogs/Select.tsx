@@ -32,6 +32,7 @@ const SelectDialog = ({
         <List
           title={title}
           flexGrow
+          autocomplete
           options={options.map((item) => item.name)}
           items={options.map((item, key) => ({
             filterBy: item.name,

@@ -61,6 +61,7 @@ const BusStopsPage: Page = () => {
           title="Przystanki"
           minWidth="20rem"
           isLoading={isLoading}
+          autocomplete
           options={busStops?.map((busStop) => busStop.name)}
           items={busStops?.map((busStop) => ({
             filterBy: busStop.name,

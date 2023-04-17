@@ -34,6 +34,7 @@ const LinesPage: Page = () => {
         <List
           title="Linie"
           isLoading={linesLoading}
+          autocomplete
           options={lines?.map((line) => line.name)}
           items={lines?.map((line) => ({
             filterBy: line.name,

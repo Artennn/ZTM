@@ -15,7 +15,7 @@ const VehiclesPage: Page = () => {
   useSession({ required: true });
   const [selected, setSelected] = useState<VehicleWithDriver>();
 
-  const { data: vehicles } = trpc.vehicle.getDriver.useQuery();
+  const { isLoading, data: vehicles } = trpc.vehicle.getDriver.useQuery();
 
   return (
     <Grid container spacing={2} sx={{ height: "100vh" }}>
@@ -23,7 +23,8 @@ const VehiclesPage: Page = () => {
         <List
           title="Pojazdy"
           minWidth="20rem"
-          isLoading={false}
+          isLoading={isLoading}
+          autocomplete
           options={vehicles?.map((vehicle) => vehicle.name)}
           items={vehicles?.map((vehicle) => ({
             filterBy: vehicle.name,
@@ -61,6 +62,7 @@ const VehiclesPage: Page = () => {
           markers={vehicles?.map((vehicle) => ({
             id: vehicle.id,
             text: `Pojazd: ${vehicle.name}`,
+            icon: "vehicle",
             pos: [vehicle.posX, vehicle.posY],
             selected: selected?.id === vehicle.id,
           }))}

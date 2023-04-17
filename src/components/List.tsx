@@ -14,6 +14,7 @@ import type { SxProps } from "@mui/material";
 const List = ({
   title,
   isLoading,
+  autocomplete,
   options,
   items = [],
   actionGroup,
@@ -24,6 +25,7 @@ const List = ({
 }: {
   title: string;
   isLoading?: boolean;
+  autocomplete?: boolean;
   options?: string[];
   items?: {
     filterBy: string;
@@ -56,10 +58,10 @@ const List = ({
         {title}
       </Typography>
 
-      {options && (
+      {autocomplete && (
         <Autocomplete
           freeSolo
-          options={options}
+          options={options || []}
           inputValue={value}
           onInputChange={(_, newValue) => setValue(newValue)}
           sx={{ pl: 1, pr: 1 }}

@@ -218,6 +218,7 @@ const NewRoute = ({
       <List
         title="Trasa"
         noAutoFocus
+        autocomplete
         options={activeRoute?.entries.map((entry) => entry.busStop.name) || []}
         items={activeRoute?.entries.map((entry, key) => ({
           filterBy: entry.busStop.name,
