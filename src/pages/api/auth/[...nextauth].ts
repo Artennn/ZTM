@@ -3,19 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 
 import { prisma } from "server/db/client";
 
-// TODO
-// roles
-// account creation (admin only)
-// custom auth pages
-// hashed passwords
-
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
   callbacks: {
     jwt({ token, user }) {
-      //console.log({ token });
       if (user?.id) {
         token.id = user.id;
       }

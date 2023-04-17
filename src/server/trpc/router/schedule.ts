@@ -1,14 +1,5 @@
-import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-
-const includeRoute = Prisma.validator<Prisma.LineInclude>()({
-  routes: {
-    include: {
-      entries: true,
-    },
-  },
-});
 
 export const scheduleRouter = router({
   getByLine: protectedProcedure
@@ -32,20 +23,6 @@ export const scheduleRouter = router({
   getByStop: protectedProcedure
     .input(z.number())
     .query(async ({ input, ctx }) => {
-      /* const lines = await ctx.prisma.line.findMany({
-        include: { ...includeRoute },
-        where: {
-          routes: {
-            some: {
-              entries: {
-                some: {
-                  busStopID: input,
-                },
-              },
-            },
-          },
-        },
-      }); */
       const routes = await ctx.prisma.route.findMany({
         where: {
           entries: {
@@ -110,7 +87,7 @@ export const scheduleRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const backup = await ctx.prisma.schedule.deleteMany({
+      await ctx.prisma.schedule.deleteMany({
         where: {
           route: {
             lineID: input.lineID,

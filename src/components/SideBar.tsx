@@ -23,11 +23,11 @@ import Image from "next/image";
 
 const SideBarItems = [
   { label: "Kokpit", icon: DashboardIcon, href: "/" },
-  { label: "Linie", icon: RouteIcon, href: "/line" },
   { label: "Przystanki", icon: RoomIcon, href: "/busStop" },
   { label: "Pojazdy", icon: DirectionsBusIcon, href: "/vehicle" },
-  { label: "Kierowcy", icon: PersonIcon, href: "/driver" },
-  { label: "Ustawienia", icon: SettingsIcon, href: "/settings" },
+  { label: "Linie", icon: RouteIcon, href: "/line" },
+  { label: "Kierowcy", icon: PersonIcon, href: "/" },
+  { label: "Ustawienia", icon: SettingsIcon, href: "/" },
 ];
 
 const SideBar = () => {
@@ -82,62 +82,62 @@ const SideBar = () => {
         </IconButton>
       </Stack>
 
-      {SideBarItems.map((item, key) => (
-        <Tooltip title={item.label} placement="right" arrow key={key}>
-          <Stack
-            direction="row"
-            onClick={() => router.push(item.href)}
-            sx={{
-              width: "100%",
-              p: 1,
-              cursor: "pointer",
-              justifyContent: open ? "initial" : "center",
-              background: (theme) =>
-                currentItem === item
-                  ? theme.gradient.selected
-                  : theme.gradient.primary,
-              "&:hover": {
-                background: (theme) => theme.gradient.hover,
-              },
-            }}
-          >
-            <item.icon fontSize="large" />
-
-            <Box
+      <Stack direction="column" spacing={1} flexGrow={1}>
+        {SideBarItems.map((item, key) => (
+          <Tooltip title={item.label} placement="right" arrow key={key}>
+            <Stack
+              direction="row"
+              onClick={() => router.push(item.href)}
               sx={{
-                display: "flex",
-                minWidth: "0px",
-                opacity: open ? 1 : 0,
-                flex: "1 1 auto",
-                transition: "opacity",
-                transitionDelay: !open ? "1s" : "0s",
-                overflow: "hidden",
+                width: "100%",
+                p: 1,
+                cursor: "pointer",
+                justifyContent: open ? "initial" : "center",
+                background: (theme) =>
+                  currentItem === item
+                    ? theme.gradient.selected
+                    : theme.gradient.primary,
+                "&:hover": {
+                  background: (theme) => theme.gradient.hover,
+                },
               }}
             >
-              <Typography
-                component="span"
-                fontSize="1rem"
-                sx={{ m: "auto 0", ml: 1 }}
+              <item.icon fontSize="large" />
+
+              <Box
+                sx={{
+                  display: "flex",
+                  minWidth: "0px",
+                  opacity: open ? 1 : 0,
+                  flex: "1 1 auto",
+                  transition: "opacity",
+                  transitionDelay: !open ? "1s" : "0s",
+                  overflow: "hidden",
+                }}
               >
-                {item.label}
-              </Typography>
-            </Box>
-          </Stack>
-        </Tooltip>
-      ))}
+                <Typography
+                  component="span"
+                  fontSize="1rem"
+                  sx={{ m: "auto 0", ml: 1 }}
+                >
+                  {item.label}
+                </Typography>
+              </Box>
+            </Stack>
+          </Tooltip>
+        ))}
+      </Stack>
 
       <Stack
         direction="row"
-        marginTop="auto !important"
         sx={{
-          width: "100%",
           p: 1,
-          cursor: "pointer",
+          width: "100%",
           justifyContent: open ? "initial" : "center",
           background: (theme) => theme.gradient.primary,
         }}
       >
-        <Avatar sx={{ width: 35, height: 35 }} />
+        <Avatar src="https://play-lh.googleusercontent.com/WwBQlacw4JsvDEvN-1WdMl95Zf2d9AVBxq3gBusGGtO_RjOCwrz_Hb2pXb3j-1wzjA" sx={{ width: 35, height: 35 }} />
 
         <Box
           sx={{

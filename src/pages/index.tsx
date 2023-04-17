@@ -1,5 +1,4 @@
 import { StatCard, InfoCard } from "components/Cards";
-import { StatusIcons } from "components/VehicleCard";
 import { MapContainer } from "components/Misc";
 
 import Grid from "@mui/material/Grid";

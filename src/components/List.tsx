@@ -74,7 +74,7 @@ const List = ({
           options={options || []}
           inputValue={value}
           onInputChange={(_, newValue) => setValue(newValue)}
-          sx={{ pl: 1, pr: 1 }}
+          sx={{ pl: 1, pr: 1, pb: 1 }}
           renderInput={(params) => (
             <TextField
               label="Szukaj"
