@@ -23,8 +23,8 @@ const LinesPage: Page = () => {
   const { data: busStops } = trpc.busStop.get.useQuery();
   const { isLoading: linesLoading, data: lines } = trpc.line.getMany.useQuery();
 
-  const [selectedLineID, setSelectedLineID] = useState(0);
-  const { data: selectedLine } = trpc.line.get.useQuery(selectedLineID);
+  const [selectedLineID, setSelectedLineID] = useState<number>();
+  const { data: selectedLine } = trpc.line.get.useQuery(selectedLineID || 0, { enabled: !!selectedLineID });
 
   const [showSchedule, setShowSchedule] = useState(0);
 
