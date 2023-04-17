@@ -35,7 +35,7 @@ const List = ({
     label: string;
     icon: ReactNode;
   }[];
-  onFilterToggle: (key: string) => void;
+  onFilterToggle?: (key: string) => void;
   options?: string[];
   items?: {
     filterBy: string;
