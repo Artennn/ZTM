@@ -17,20 +17,27 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useState } from "react";
 import { useRouter } from "next/dist/client/router";
+import { signOut, useSession } from "next-auth/react";
+import { trpc } from "utils/trpc";
 import Image from "next/image";
 
 const SideBarItems = [
   { label: "Kokpit", icon: DashboardIcon, href: "/" },
   { label: "Linie", icon: RouteIcon, href: "/line" },
   { label: "Przystanki", icon: RoomIcon, href: "/busStop" },
-  { label: "Kierowcy", icon: PersonIcon, href: "/driver" },
   { label: "Pojazdy", icon: DirectionsBusIcon, href: "/vehicle" },
+  { label: "Kierowcy", icon: PersonIcon, href: "/driver" },
   { label: "Ustawienia", icon: SettingsIcon, href: "/settings" },
 ];
 
 const SideBar = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const { data: sessionData } = useSession();
+  const [open, setOpen] = useState(true);
+
+  const { isLoading, data: user } = trpc.user.get.useQuery(
+    sessionData?.user?.id || ""
+  );
 
   const currentItem = SideBarItems.find((item) => {
     if (item.href === "/" && router.asPath !== item.href) return false;
@@ -148,12 +155,14 @@ const SideBar = () => {
             fontSize="1rem"
             sx={{ m: "auto 0", ml: 1 }}
           >
-            Konto
+            {isLoading || !user ? "..." : user.username}
           </Typography>
 
-          <IconButton sx={{ ml: "auto" }}>
-            <LogoutIcon fontSize="small" />
-          </IconButton>
+          <Tooltip title="Wyloguj" placement="top" arrow>
+            <IconButton sx={{ ml: "auto" }} onClick={() => signOut()}>
+              <LogoutIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Stack>
     </Stack>
