@@ -4,8 +4,13 @@ import Button from "@mui/material/Button";
 
 import InfoIcon from "@mui/icons-material/Info";
 
-import type { ReactNode } from "react";
+import NewInfo from "./dialogs/NewInfo";
+
+import { type ReactNode, useState } from "react";
+import { trpc } from "utils/trpc";
+
 import type { SvgIconComponent } from "@mui/icons-material";
+import type { Info } from "@prisma/client";
 
 export const StatCard = ({
   title,
@@ -66,68 +71,109 @@ export const StatCard = ({
   );
 };
 
-const InfoMessages = [
-  {
-    title: "Funkcjonowanie linii Gaj w dniach 8 kwietnia i 10 kwietnia",
-    content:
-      "Informujemy, że w dniach 8 kwietnia br. (Wielka Sobota) i 10 kwietnia br. (Poniedziałek Wielkanocny) linia Gaj nie będzie funkcjonować.",
-  },
-  {
-    title: "Zmiany w rozkładach jazdy ważne od 3 kwietnia",
-    content:
-      "Od 3 kwietnia br. (poniedziałek) obowiązywać będą zmiany w rozkładach komunikacji miejskie. Nowe rozkłady można na stronie ztm.lublin.eu.",
-  },
-];
-
 export const InfoCard = () => {
-  return (
-    <Stack
-      direction="column"
-      height={1}
-      sx={{
-        p: 1,
-        pb: 1,
-        border: (theme) => theme.border.primary,
-        background: (theme) => theme.gradient.primary,
-      }}
-    >
-      <Stack direction="row" alignItems="center" spacing={1} mb={2}>
-        <InfoIcon fontSize="large" />
-        <Typography variant="h6">Informacje w pojazdach</Typography>
-      </Stack>
+  const [isAdding, setIsAdding] = useState(false);
+  const [editing, setEditing] = useState<Info>();
 
+  const { data: infoMessages, refetch } = trpc.info.get.useQuery();
+  const { mutate: addInfo } = trpc.info.add.useMutation();
+  const { mutate: editInfo } = trpc.info.edit.useMutation();
+  const { mutate: deleteInfo } = trpc.info.delete.useMutation();
+
+  const handleAddInfo = (info: Omit<Info, "id">) => {
+    addInfo(info, {
+      onSuccess: () => {
+        setIsAdding(false);
+        refetch();
+      },
+    });
+  };
+
+  const handleEditInfo = (info: Info) => {
+    editInfo(info, {
+      onSuccess: () => {
+        setEditing(undefined);
+        refetch();
+      },
+    });
+  };
+
+  const handleDelete = (id: number) => {
+    deleteInfo(id, { onSuccess: () => refetch() });
+  };
+
+  return (
+    <>
       <Stack
         direction="column"
-        spacing={2}
-        sx={{ overflowY: "auto", height: 1, pr: 1 }}
+        height={1}
+        sx={{
+          p: 1,
+          pb: 1,
+          border: (theme) => theme.border.primary,
+          background: (theme) => theme.gradient.primary,
+        }}
       >
-        {InfoMessages.map((message, key) => (
-          <Stack
-            key={key}
-            direction="column"
-            sx={{ pb: 1, borderBottom: (theme) => theme.border.primary }}
-          >
-            <Typography variant="h6">{message.title}</Typography>
-            <Typography variant="subtitle1">{message.content}</Typography>
+        <Stack direction="row" alignItems="center" spacing={1} mb={2}>
+          <InfoIcon fontSize="large" />
+          <Typography variant="h6">Informacje w pojazdach</Typography>
+        </Stack>
 
-            <Stack direction="row" spacing={2} justifyContent="flex-end" pt={1}>
-              <Button variant="contained" color="info">
-                Edytuj
-              </Button>
+        <Stack
+          direction="column"
+          spacing={2}
+          sx={{ overflowY: "auto", height: 1, pr: 1 }}
+        >
+          {infoMessages?.map((message, key) => (
+            <Stack
+              key={key}
+              direction="column"
+              sx={{ pb: 1, borderBottom: (theme) => theme.border.primary }}
+            >
+              <Typography variant="h6">{message.title}</Typography>
+              <Typography variant="subtitle1">{message.content}</Typography>
 
-              <Button variant="contained" color="error">
-                Usun
-              </Button>
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="flex-end"
+                pt={1}
+              >
+                <Button
+                  variant="contained"
+                  color="info"
+                  onClick={() => setEditing(message)}
+                >
+                  Edytuj
+                </Button>
+
+                <Button variant="contained" color="error" onClick={() => handleDelete(message.id)}>
+                  Usun
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
-        ))}
+          ))}
+        </Stack>
+
+        <Stack direction="column" flexGrow={1} mt={1} justifyContent="flex-end">
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setIsAdding(true)}
+          >
+            Dodaj
+          </Button>
+        </Stack>
       </Stack>
 
-      <Stack direction="column" flexGrow={1} mt={1} justifyContent="flex-end">
-        <Button variant="contained" color="success">
-          Dodaj
-        </Button>
-      </Stack>
-    </Stack>
+      {(isAdding || editing) && (
+        <NewInfo
+          info={editing}
+          onAdd={handleAddInfo}
+          onEdit={handleEditInfo}
+          onClose={() => isAdding ? setIsAdding(false) : setEditing(undefined)}
+        />
+      )}
+    </>
   );
 };

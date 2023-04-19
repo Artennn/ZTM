@@ -1,5 +1,6 @@
 import { router } from "../trpc";
 import { busStopRouter } from "./busStop";
+import { infoRouter } from "./info";
 import { lineRouter } from "./line";
 import { scheduleRouter } from "./schedule";
 import { userRouter } from "./user";
@@ -10,6 +11,7 @@ export const appRouter = router({
   line: lineRouter,
   schedule: scheduleRouter,
   vehicle: vehicleRouter,
+  info: infoRouter,
   user: userRouter,
 });
 

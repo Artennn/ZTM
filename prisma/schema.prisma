@@ -87,3 +87,9 @@ model Vehicle {
   driverID Int
   driver Driver? @relation(fields: [driverID], references: [id])
 }
+
+model Info {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+}
