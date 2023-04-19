@@ -1,6 +1,8 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import { CircularProgress } from "@mui/material";
 
 import InfoIcon from "@mui/icons-material/Info";
 
@@ -75,7 +77,7 @@ export const InfoCard = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [editing, setEditing] = useState<Info>();
 
-  const { data: infoMessages, refetch } = trpc.info.get.useQuery();
+  const { isLoading, data: infoMessages, refetch } = trpc.info.get.useQuery();
   const { mutate: addInfo } = trpc.info.add.useMutation();
   const { mutate: editInfo } = trpc.info.edit.useMutation();
   const { mutate: deleteInfo } = trpc.info.delete.useMutation();
@@ -153,6 +155,12 @@ export const InfoCard = () => {
               </Stack>
             </Stack>
           ))}
+
+          {isLoading && (
+            <Box alignSelf="center" mt={3}>
+              <CircularProgress size={60} />
+            </Box>
+          )}
         </Stack>
 
         <Stack direction="column" flexGrow={1} mt={1} justifyContent="flex-end">
