@@ -1,8 +1,9 @@
 import Head from "next/head";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 
 import SideBar from "./SideBar";
 
@@ -73,19 +74,22 @@ export const MapContainer = ({
   actionGroup?: ReactNode;
   sx?: SxProps;
 }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const Map = useMap(deps);
 
   return (
     <Box
       sx={{
         position: "relative",
+        width: 1,
         height: 1,
         p: 0.1,
         border: (theme) => theme.border.primary,
         ...sx,
       }}
     >
-      <Map {...props} />
+      {!isLoaded &&  <Skeleton sx={{ position: "absolute", width: 1, height: 1 }} variant="rectangular" /> }
+      <Map {...props} onReady={() => setIsLoaded(false)} />
 
       {actionGroup && (
         <Stack

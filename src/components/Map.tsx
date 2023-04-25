@@ -101,6 +101,7 @@ export interface MapProps {
   }[];
   onClick?: (gps: [number, number]) => void;
   onMarkerSelect?: (id: number) => void;
+  onReady?: () => void;
 }
 
 const Map = ({
@@ -113,6 +114,7 @@ const Map = ({
   markers,
   onClick,
   onMarkerSelect,
+  onReady,
 }: MapProps) => {
   const polyLines = routes?.map((route) => ({
     ...route,
@@ -136,6 +138,7 @@ const Map = ({
         width: "100%",
         cursor: onClick ? "crosshair" : "grab",
       }}
+      whenReady={onReady}
     >
       {markers?.map((marker) => (
         <Marker
