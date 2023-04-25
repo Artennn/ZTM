@@ -15,11 +15,13 @@ import SignalWifiOffIcon from "@mui/icons-material/SignalWifiOff";
 import BusAlertIcon from "@mui/icons-material/BusAlert";
 
 import { useSession } from "next-auth/react";
+import { getServerAuthSession } from "server/common/get-server-auth-session";
 import { trpc } from "utils/trpc";
 
 import { Statuses as VehStatuses, StatusIcons as VehIcons, StatusLabels as VehLabels } from "components/VehicleCard";
 
 import type { Page } from "types/app";
+import type { GetServerSideProps } from "next";
 
 const Home: Page = () => {
   useSession({ required: true });
@@ -138,5 +140,22 @@ const Home: Page = () => {
     </Grid>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+
+  if (!session?.user?.id) {
+      return {
+          redirect: {
+              destination: "/api/auth/signin",
+              permanent: false,
+          }
+      }
+  }
+
+  return {
+      props: {},
+  }
+}
 
 export default Home;
