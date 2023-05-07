@@ -8,36 +8,16 @@ import Typography from "@mui/material/Typography";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import LocalParkingIcon from "@mui/icons-material/LocalParking";
-import AirportShuttleIcon from "@mui/icons-material/AirportShuttle";
-import NoTransferIcon from "@mui/icons-material/NoTransfer";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-
 import PersonIcon from "@mui/icons-material/Person";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
 import { useRef, useState } from "react";
 import { useScrollAndExpand } from "utils/hooks";
 
-import type { MouseEvent, ReactNode } from "react";
-import type { VehicleStatus } from "@prisma/client";
+import { Definitions } from "definitions/vehicle";
+
+import type { MouseEvent } from "react";
 import type { VehicleWithDriver } from "server/trpc/router/vehicle";
-
-export const StatusIcons: Record<VehicleStatus, ReactNode> = {
-  parked: <LocalParkingIcon color="info" />,
-  enroute: <AirportShuttleIcon color="success" />,
-  service: <NoTransferIcon color="warning" />,
-  emergency: <WarningAmberIcon color="error" />,
-};
-
-export const StatusLabels: Record<VehicleStatus, string> = {
-  parked: "W trasie",
-  enroute: "Zaparkowany",
-  service: "Trasa serwisowa",
-  emergency: "Awaria",
-};
-
-export const Statuses: VehicleStatus[] = ["parked", "enroute", "service", "emergency"];
 
 const VehicleCard = ({
   vehicle,
@@ -82,7 +62,7 @@ const VehicleCard = ({
     >
       <Stack direction="column">
         <Stack direction="row" spacing={1} alignItems="center">
-          {StatusIcons[vehicle.status]}
+          {Definitions[vehicle.status].Icon}
           <Typography flexGrow={1}>{vehicle.name}</Typography>
 
           <IconButton onClick={handleExpanded} sx={{ justifySelf: "flex-end" }}>

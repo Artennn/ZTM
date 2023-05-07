@@ -18,7 +18,10 @@ import { useSession } from "next-auth/react";
 import { getServerAuthSession } from "server/common/get-server-auth-session";
 import { trpc } from "utils/trpc";
 
-import { Statuses as VehStatuses, StatusIcons as VehIcons, StatusLabels as VehLabels } from "components/VehicleCard";
+import {
+  Statuses as VehicleStatuses,
+  Definitions as VehicleDefinitions,
+} from "definitions/vehicle";
 
 import type { Page } from "types/app";
 import type { GetServerSideProps } from "next";
@@ -35,10 +38,10 @@ const Home: Page = () => {
         <StatCard
           title="Pojazdy"
           Icon={DirectionsBusIcon}
-          stats={VehStatuses.map((stat) => ({
+          stats={VehicleStatuses.map((stat) => ({
             key: stat,
-            icon: VehIcons[stat],
-            label: VehLabels[stat],
+            label: VehicleDefinitions[stat].label,
+            icon: VehicleDefinitions[stat].Icon,
             count: vehicleStats?.find((x) => x.status === stat)?._count,
           }))}
         />

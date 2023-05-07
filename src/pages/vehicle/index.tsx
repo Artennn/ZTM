@@ -4,9 +4,11 @@ import { trpc } from "utils/trpc";
 
 import List from "components/List";
 import { MapContainer } from "components/Misc";
-import VehicleCard, { Statuses, StatusIcons, StatusLabels } from "components/VehicleCard";
+import VehicleCard from "components/VehicleCard";
 
 import Grid from "@mui/material/Grid";
+
+import { Statuses, Definitions } from "definitions/vehicle";
 
 import type { VehicleWithDriver } from "server/trpc/router/vehicle";
 import type { Page } from "types/app";
@@ -38,8 +40,8 @@ const VehiclesPage: Page = () => {
           filters={Statuses.map(status => ({
             key: status,
             enabled: !filtered.includes(status),
-            label: StatusLabels[status],
-            icon: StatusIcons[status],
+            label: Definitions[status].label,
+            icon: Definitions[status].Icon,
           }))}
           onFilterToggle={handleFilterToggle}
           options={filteredVehicles?.map((vehicle) => vehicle.name)}
