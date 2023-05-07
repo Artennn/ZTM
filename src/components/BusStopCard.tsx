@@ -4,12 +4,18 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import RoomIcon from "@mui/icons-material/Room";
+import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
-import { type MouseEvent, useState, useRef } from "react";
+import { type MouseEvent, useState, useRef, useMemo } from "react";
 import { useScrollAndExpand } from "utils/hooks";
+
+import { type Status, Statuses, Definitions } from "definitions/busStop";
 
 import type { BusStop } from "@prisma/client";
 
@@ -37,6 +43,13 @@ const BusStopCard = ({
     setExpanded(!expanded);
   };
 
+  // generate random status only once
+  const status = useMemo(
+    () => Statuses[Math.floor(Math.random() * Statuses.length)] as Status,
+    []
+  );
+  const Icon = Definitions[status].Icon;
+
   return (
     <Paper
       ref={ref}
@@ -55,8 +68,9 @@ const BusStopCard = ({
       }}
     >
       <Stack direction="column">
-        <Stack direction="row" justifyContent="space-between">
-          <Typography>{busStop.name}</Typography>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <RoomIcon color={Definitions[status].color} fontSize="large" />
+          <Typography flexGrow={1}>{busStop.name}</Typography>
 
           <IconButton onClick={handleExpanded}>
             {expanded ? (
@@ -68,7 +82,30 @@ const BusStopCard = ({
         </Stack>
 
         <Collapse in={expanded}>
-          <Stack direction="row" justifyContent="space-between" mt={1}>
+          <Stack direction="column" spacing={1} p={0.5}>
+            <Stack direction="row" spacing={1}>
+              <Tooltip title="Status" placement="top" arrow>
+                <Icon />
+              </Tooltip>
+              <Typography>{Definitions[status].label}</Typography>
+            </Stack>
+
+            <Stack direction="row" spacing={1}>
+              <Tooltip title="Ostatnia aktualizacja" placement="top" arrow>
+                <AccessTimeIcon />
+              </Tooltip>
+              <Typography>{new Date().toLocaleString()}</Typography>
+            </Stack>
+
+            <Stack direction="row" spacing={1}>
+              <Tooltip title="Współrzędne" placement="top" arrow>
+                <GpsFixedIcon />
+              </Tooltip>
+              <Typography>{`(${busStop.gpsX}, ${busStop.gpsY})`}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction="row" justifyContent="flex-end" spacing={1} mt={1}>
             <Button
               variant="contained"
               size="small"

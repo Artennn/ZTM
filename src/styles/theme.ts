@@ -18,6 +18,17 @@ export const RouteColors = [
   "purple",
 ];
 
+export type MuiColor =
+  | "inherit"
+  | "action"
+  | "disabled"
+  | "primary"
+  | "secondary"
+  | "error"
+  | "info"
+  | "success"
+  | "warning";
+
 declare module "@mui/material/styles" {
   interface ThemeOptions {
     gradient: {

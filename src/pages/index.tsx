@@ -8,10 +8,6 @@ import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import RoomIcon from "@mui/icons-material/Room";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 
-import SignalWifi3BarIcon from "@mui/icons-material/SignalWifi3Bar";
-import SignalWifiStatusbarConnectedNoInternet4Icon from "@mui/icons-material/SignalWifiStatusbarConnectedNoInternet4";
-import SignalWifiOffIcon from "@mui/icons-material/SignalWifiOff";
-
 import BusAlertIcon from "@mui/icons-material/BusAlert";
 
 import { useSession } from "next-auth/react";
@@ -23,8 +19,20 @@ import {
   Definitions as VehicleDefinitions,
 } from "definitions/vehicle";
 
+import {
+  type Status as BusStopStatus,
+  Statuses as BusStopStatuses,
+  Definitions as BusStopDefinitions,
+} from "definitions/busStop";
+
 import type { Page } from "types/app";
 import type { GetServerSideProps } from "next";
+
+const BusStopStats: { status: BusStopStatus; _count: number }[] = [
+  { status: "online", _count: 153 },
+  { status: "error", _count: 5 },
+  { status: "offline", _count: 2 },
+];
 
 const Home: Page = () => {
   useSession({ required: true });
@@ -51,28 +59,15 @@ const Home: Page = () => {
         <StatCard
           title="Przystanki"
           Icon={RoomIcon}
-          stats={[
-            {
-              key: "online",
-              icon: <SignalWifi3BarIcon color="success" />,
-              label: "Aktywne",
-              count: 158,
-            },
-            {
-              key: "error",
-              icon: (
-                <SignalWifiStatusbarConnectedNoInternet4Icon color="warning" />
-              ),
-              label: "Awaria",
-              count: 3,
-            },
-            {
-              key: "offline",
-              icon: <SignalWifiOffIcon color="error" />,
-              label: "Niedostepne",
-              count: 2,
-            },
-          ]}
+          stats={BusStopStatuses.map((stat) => {
+            const Icon = BusStopDefinitions[stat].Icon;
+            return {
+              key: stat,
+              label: BusStopDefinitions[stat].label,
+              icon: <Icon color={BusStopDefinitions[stat].color} />,
+              count: BusStopStats.find((x) => x.status === stat)?._count,
+            };
+          })}
           actionGroup={
             <Button variant="contained" color="info">
               Szczegoly
